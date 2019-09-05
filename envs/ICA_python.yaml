@@ -1,0 +1,10 @@
+channels:
+  - default
+  - bioconda
+  - conda-forge
+dependencies:
+  - matplotlib =3.1.0
+  - numpy =1.16.4
+  - pandas =0.24.2
+  - rpy2 =2.9.4
+  - r-gam =1.16.1
