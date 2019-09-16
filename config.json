@@ -25,7 +25,7 @@
     "counts_toy":
     {
       "annotation": ["ensembl", "refseq"],
-      "data_id": ["ERR315422"]
+      "tissues": ["adrenal_gland", "brain"]
     }
   }
 }

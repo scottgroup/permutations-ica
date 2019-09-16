@@ -24,6 +24,9 @@ class Dataset():
         # Simple scaling
         self.scaling_data()
 
+        # Flip back to genes as rows
+        self.data = self.data.T
+
     def load_data(self):
         """ Load dataset from tsv """
         self.data = pd.read_csv(
@@ -70,7 +73,7 @@ class Dataset():
     def scaling_data(self):
         """ Scaling data """
 
-        # pseudo_count = 13
+        pseudo_count = 13
         # self.data[c] = np.log10(self.data[c] + pseudo_count)
-        # self.data = np.log2(self.data + pseudo_count)
+        # self.data = np.log10(self.data + pseudo_count)
         self.data = 2*np.sqrt(self.data + 3.0/8.0)

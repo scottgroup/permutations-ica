@@ -3,12 +3,14 @@ from rpy2.robjects.packages import STAP
 import rpy2.robjects as robj
 import os
 
-print(os.getcwd())
-
-
-with open('scripts/running_pyProDenICA/GFunc.r', 'r') as f:
+with open('scripts/running_ICA/GFunc.r', 'r') as f:
     string = f.read()
 GFunc = STAP(string, "GFunc")
+
+
+with open('scripts/running_ICA/ProDenICA.r', 'r') as f:
+    string = f.read()
+ProDenICAfun = STAP(string, "ProDenICA")
 
 
 def parse_GFunc(gfunc):
@@ -53,6 +55,32 @@ def amari(V, W, orth=True):
     return (sum(rsum/rmax - 1) + sum(csum/cmax - 1))/(2 * np.size(A, 0))
 
 
+def covarianceGit(x):
+    mean = np.mean(x, axis=1, keepdims=True)
+    n = np.shape(x)[1] - 1
+    m = x - mean
+
+    return (m.dot(m.T))/n
+
+def whitenGit(x):
+    # Calculate the covariance matrix
+    coVarM = covarianceGit(x)
+
+    # Single value decoposition
+    U, S, V = np.linalg.svd(coVarM)
+
+    # Calculate diagonal matrix of eigenvalues
+    d = np.diag(1.0 / np.sqrt(S))
+
+    # Calculate whitening matrix
+    whiteM = np.dot(U, np.dot(d, U.T))
+
+    # Project onto whitening matrix
+    Xw = np.dot(whiteM, x)
+
+    return Xw, whiteM
+
+
 def zca_whitening_matrix(X):
     """
     Function to compute ZCA whitening matrix (aka Mahalanobis whitening).
@@ -75,6 +103,31 @@ def zca_whitening_matrix(X):
     return ZCAMatrix
 
 
+def ProDenICA(X,
+              k=None,
+              W0=None,
+              whiten=False,
+              maxit=500,
+              thresh=1e-7,
+              restarts=0,
+              trace=False,
+              Gfunc=ProDenICAfun.GPois,
+              eps_rank=1e-7):
+    """ Running the R implementation """
+    print('This is X')
+    print(X)
+    print(type(X))
+
+    data = numpy2r(X)
+
+    ProDenICAfun.ProDenICA(
+        x=data, trace=True, maxit=10, Gfunc=Gfunc
+        # k=k, W0=W0, whiten=whiten,,
+        # maxit=maxit, thresh=thresh, restarts=restarts,
+        # trace=trace# , # Gfunc=Gfunc, eps_rank=eps_rank
+    )
+
+
 def pyProDenICA(X,
                 k=None,
                 W0=None,
@@ -83,7 +136,7 @@ def pyProDenICA(X,
                 thresh=1e-7,
                 restarts=0,
                 trace=False,
-                Gfunc=GFunc.GPois,
+                Gfunc=GFunc.G1,
                 eps_rank=1e-7):
     """Performs ProDenICA analysis
 
@@ -98,7 +151,7 @@ def pyProDenICA(X,
         k = p
 
     # Centering X
-    X -= np.mean(X, axis=0)
+    # X -= np.mean(X, axis=0)
 
     # Whitening data
     if whiten:
@@ -120,6 +173,7 @@ def pyProDenICA(X,
         # ZCA whitening
         zca_whitener = zca_whitening_matrix(X)
         X = np.dot(zca_whitener, X)
+        # X, _ = whitenGit(X)
 
         print('After whitening ', X.shape)
     else:
@@ -166,6 +220,9 @@ def pyProDenICA(X,
     # Main loop
     nw = 10
 
+    gpS_file = 'gpS_file.txt'
+    gS_file = 'gS_file.txt'
+
     for n_it in range(maxit):
         # Running something similar as previous
         s = np.dot(X, W0)
@@ -176,7 +233,16 @@ def pyProDenICA(X,
         gS = np.array([d['gs'] for d in flist0])
         gpS = np.array([d['gps'] for d in flist0])
 
-        t1 = np.dot(X.T, gS.T/n)  # No tranpose? Due to gS being linear?
+        with open(gS_file, 'a') as f:
+            f.write(str([list(x) for x in gS]) + '\n')
+
+        with open(gpS_file, 'a') as f:
+            f.write(str([list(x) for x in gpS]) + '\n')
+        # print(crit0)
+        # print(gS)
+        # print(gpS)
+
+        t1 = np.dot(X.T, gS.T/n)
         t2 = np.mean(gpS, axis=1)
         W1 = t1 - W0/(1/t2)
         W1 = ICAorthW(W1)
@@ -189,6 +255,6 @@ def pyProDenICA(X,
 
         # Reach stability
         if nw < thresh:
-            return W0, crit0, nw, n_it
+            return W0, s, crit0, nw, n_it
 
-    return 0, crit0, nw, n_it
+    return 0, 0, crit0, nw, n_it

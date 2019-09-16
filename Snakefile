@@ -6,9 +6,13 @@ wildcard_constraints:
 
 
 # Including rules
-include: "rules/running_pyProDenICA.smk"
+include: "rules/running_ICA.smk"
 
 
 rule all:
     input:
-        "results/ICA/pyProDenICA/counts_toy/M6_n10/components.tsv"
+        # "results/ICA/sklearnFastICA/counts_toy/M9_n10/components.tsv",
+        expand(
+            "results/ICA/sklearnFastICA/counts_toy/M{M}_n10/dendrogram.png",
+            M=range(4,18)
+        )

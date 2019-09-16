@@ -1,2 +1,9 @@
 # Snakemake files
 .snakemake
+
+# Python files
+__pycache__/
+*.pyc
+
+# Results folders
+results/*
