@@ -8,5 +8,19 @@
         "time": "0-1:00:00",
         "mail-user": "joel.simoneau@usherbrooke.ca",
         "mail-type": "FAIL"
+    },
+    "running_ICA":
+    {
+    	"time": "0-6:00:00"
+    },
+    "flipping_ICA_components":
+    {
+    	"cpus-per-task": "2",
+	"mem": "8000M"
+    },
+    "ICA_components_dendrogram":
+    {
+    	"cpus-per-task": "2",
+	"mem": "8000M"
     }
 }

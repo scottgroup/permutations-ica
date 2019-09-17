@@ -1,14 +1,16 @@
 
 rule running_ICA:
     input:
-        dataset = "data/counts.tsv"
+        dataset = "data/counts_noNaN.tsv"
     output:
         raw_components = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}/raw_components.tsv",
         fit_min = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}/fit_min.txt"
     params:
-        max_it = 10000,
-        std_from_mean = 3,
+        max_it = 25000,
+        std_from_mean = 0,
         tolerance = 1e-16
+    threads:
+        32
     conda:
         "../envs/ICA_python.yaml"
     script:

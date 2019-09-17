@@ -17,15 +17,7 @@
   },
   "ICA_datasets":
   {
-    "counts": {},
-    "counts_vanilla":
-    {
-      "annotation": ["ensembl", "refseq"]
-    },
-    "counts_toy":
-    {
-      "annotation": ["ensembl", "refseq"],
-      "tissues": ["adrenal_gland", "brain"]
-    }
+    "counts_noNaN": {},
+    "counts_NaN": {}
   }
 }
