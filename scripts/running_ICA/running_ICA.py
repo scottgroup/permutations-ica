@@ -16,7 +16,7 @@ def prepare_data(dataset, std_from_mean):
     """
     data_std = dataset.data.std(axis=1)
     mean_std = np.mean(data_std)
-    data = dataset.data[data_std > std_from_mean*mean_std]
+    data = dataset.data[data_std >= std_from_mean*mean_std]
 
     return data
 
@@ -114,7 +114,7 @@ M = int(snakemake.wildcards.M)  # Number of components
 n = int(snakemake.wildcards.n)  # Number of bootstrapping iteration
 max_it = int(snakemake.params.max_it)
 tolerance = float(snakemake.params.tolerance)
-std_from_mean = float(snakemake.params.std_from_mean)
+std_from_mean = float(snakemake.wildcards.std)
 
 # Preparing data
 data = prepare_data(dataset, std_from_mean)

@@ -15,3 +15,4 @@ plt.figure()
 dn = hierarchy.dendrogram(Z)
 
 plt.savefig(snakemake.output.plot)
+plt.savefig(snakemake.output.plot2)

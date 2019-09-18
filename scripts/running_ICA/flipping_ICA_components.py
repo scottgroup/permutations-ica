@@ -63,20 +63,29 @@ to_drop = list()
 for key in corr_co:
     if len(corr_co[key]) < n * minimal_occurence:
         to_drop.append(key)
-for droppin in to_drop:
-    del corr_co[droppin]
-
+for dropping in to_drop:
+    del corr_co[dropping]
 
 # Flipping components
 to_flip = flip_components(components, corr_co)
-print('FLipping')
-print(to_flip)
 for col in to_flip:
     components[col] *= -1
 
+# Keeping components that have N elements, all from different iterations
+good_corr_co = dict()
+good_comps = list()
+for key, cluster in corr_co.items():
+    if len(cluster) == n:
+        iterations = [it.split()[0][2:] for it in cluster]
+        if len(iterations) == len(set(iterations)):
+            good_corr_co[key] = cluster
+            good_comps.extend(cluster)
+
+components = components[good_comps]
+
 # Output of correlated components
 with open(snakemake.output.corr_components, 'w') as f:
-    json.dump(corr_co, f)
+    json.dump(good_corr_co, f)
 
 # Output of flipped components
 components.to_csv(snakemake.output.components, sep='\t')
