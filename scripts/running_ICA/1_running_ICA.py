@@ -93,7 +93,13 @@ def run_ICA(ICAmethod, data, M, max_it, tolerance, model_i):
         obj_f = logcosh_gs(components)
 
         # Formatting the components
+
+        # print(components[:13, :])
+
         components_i = pd.DataFrame(components, index=data.index)
+
+        # print(components_i)
+
         components_i.columns = [
             'r_' + str(model_i) + ' n_' + str(c) for c in components_i.columns
         ]
@@ -106,7 +112,7 @@ def run_ICA(ICAmethod, data, M, max_it, tolerance, model_i):
 
 # Importating, formating and scaling the data
 data_slice = snakemake.config['ICA_datasets'][snakemake.wildcards.dataset]
-dataset = Dataset(snakemake.input.dataset, data_slice)
+dataset = Dataset(snakemake.input.counts, data_slice)
 
 # Setting parameters
 ICAmethod = snakemake.wildcards.ICAmethod

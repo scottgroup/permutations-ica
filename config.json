@@ -17,7 +17,13 @@
   },
   "ICA_datasets":
   {
-    "counts_noNaN": {},
-    "counts_NaN": {}
+    "counts_noNaN":
+    {
+        "counts": "data/counts_noNaN.tsv"
+    },
+    "counts_NaN":
+    {
+        "counts": "data/counts_NaN.tsv"
+    }
   }
 }
