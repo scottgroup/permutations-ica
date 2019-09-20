@@ -10,25 +10,20 @@ wildcard_constraints:
 # Including rules
 include: "rules/running_ICA.smk"
 
+# Defining variables
+M = range(9, 16)
+std = [0, 1, 2, 3]
+datasets = ["counts_noNaN", "counts_NaN"]
+sigma = [1, 4, 9]
+
 
 rule all:
     input:
-        # expand(
-        #     "results/ICA/sklearnFastICA/counts_{isNaN}/plots/M{M}_n20_std{std}.png",
-	    #     M=range(9,16),
-        #     isNaN=['noNaN', 'NaN'],
-	    #     std=[0, 1, 2, 3, 4]
-        # )
         expand(
-            "results/ICA/sklearnFastICA/{dataset}/M{M}_n10_std{std}/components_mean.tsv",
-            M=range(4,6),
-            std=[3],
-            dataset=["counts_noNaN"]
+            "results/ICA/sklearnFastICA/{dataset}/M{M}_n10_std{std}/filtered_components/sigma_{sigma}/projection.tsv",
+            M=M, std=std, dataset=datasets, sigma=sigma
         ),
         expand(
-            "results/ICA/sklearnFastICA/{dataset}/M{M}_n10_std{std}/filtered_components/sigma_{sigma}.tsv",
-            M=range(4,6),
-            std=[3],
-            dataset=["counts_noNaN"],
-            sigma=[1, 4, 9]
-        ),
+            "results/ICA/sklearnFastICA/{dataset}/M{M}_n10_std{std}/dendrogram.png",
+            M=M, std=std, dataset=datasets, sigma=sigma
+        )

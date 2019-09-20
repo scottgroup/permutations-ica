@@ -20,7 +20,7 @@ rule running_ICA:
         raw_components = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/raw_components.tsv",
         fit_min = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/fit_min.txt"
     params:
-        max_it = 10000,
+        max_it = 50000,
         tolerance = 1e-18
     threads:
         32
