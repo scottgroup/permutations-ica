@@ -1,4 +1,13 @@
 
+
+def get_components_range(wildcards):
+    return expand(
+        "results/ICA/{{ICAmethod}}/{{dataset}}/M{M}_n{{n}}_std{{std}}/components_mean.tsv",
+        M=range(int(wildcards.min), int(wildcards.max)+1)
+    )
+
+
+
 rule running_ICA:
     """
         Running an ICA model on the data
@@ -113,3 +122,21 @@ rule dataset_projection_on_filtered_components:
         "../envs/ICA_python.yaml"
     script:
         "../scripts/running_ICA/5_dataset_projection_on_filt_comps.py"
+
+
+rule component_agnostic_model:
+    """
+
+    """
+    input:
+        get_components_range
+    output:
+        components = "results/ICA/{ICAmethod}/{dataset}/combine_{min}to{max}_n{n}_std{std}/components.tsv",
+        corr_components = "results/ICA/{ICAmethod}/{dataset}/combine_{min}to{max}_n{n}_std{std}/correlated_components.json"
+    params:
+        threshold = 0.95
+    conda:
+        "../envs/ICA_python.yaml"
+    script:
+        "../scripts/running_ICA/6_component_agnostic_model.py"
+

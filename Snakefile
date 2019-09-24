@@ -11,8 +11,8 @@ wildcard_constraints:
 include: "rules/running_ICA.smk"
 
 # Defining variables
-M = range(9, 16)
-std = [0, 1, 2, 3]
+M = range(10, 16)
+std = [0, 2, 4]
 datasets = ["counts_noNaN", "counts_NaN"]
 sigma = [1, 4, 9]
 
