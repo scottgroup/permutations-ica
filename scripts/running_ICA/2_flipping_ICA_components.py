@@ -73,15 +73,12 @@ for col in to_flip:
 
 # Keeping components that have N elements, all from different iterations
 good_corr_co = dict()
-good_comps = list()
 for key, cluster in corr_co.items():
     if len(cluster) == n:
         iterations = [it.split()[0][2:] for it in cluster]
         if len(iterations) == len(set(iterations)):
             good_corr_co[key] = cluster
-            good_comps.extend(cluster)
 
-components = components[good_comps]
 
 # Output of correlated components
 with open(snakemake.output.corr_components, 'w') as f:

@@ -26,7 +26,7 @@ rule running_ICA:
     input:
         counts = lambda w: config['ICA_datasets']['{dataset}'.format(**w)]['counts']
     output:
-        raw_components = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/raw_components.tsv",
+        raw_components = temp("results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/raw_components.tsv"),
         fit_min = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/fit_min.txt"
     params:
         max_it = 50000,
@@ -59,22 +59,6 @@ rule flipping_ICA_components:
         "../envs/ICA_python.yaml"
     script:
         "../scripts/running_ICA/2_flipping_ICA_components.py"
-
-
-rule ICA_components_dendrogram:
-    """
-        Plots the correlation between all components from all iterations of an
-        ICA model.
-    """
-    input:
-        components = rules.flipping_ICA_components.output.components
-    output:
-        plot = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/dendrogram.png",
-        plot2 = "results/ICA/{ICAmethod}/{dataset}/plots/M{M}_n{n}_std{std}.png"
-    conda:
-        "../envs/ICA_python.yaml"
-    script:
-        "../scripts/plotting_ICA/plotting_dendrogram.py"
 
 
 rule merging_n_components:
@@ -134,9 +118,8 @@ rule component_agnostic_model:
         components = "results/ICA/{ICAmethod}/{dataset}/combine_{min}to{max}_n{n}_std{std}/components.tsv",
         corr_components = "results/ICA/{ICAmethod}/{dataset}/combine_{min}to{max}_n{n}_std{std}/correlated_components.json"
     params:
-        threshold = 0.95
+        threshold = 0.90
     conda:
         "../envs/ICA_python.yaml"
     script:
         "../scripts/running_ICA/6_component_agnostic_model.py"
-

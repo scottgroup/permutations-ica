@@ -82,7 +82,6 @@ to_flip = flip_components(components, corr_co)
 for col in to_flip:
     components[col] *= -1
 
-
 # Output of components
 components.to_csv(snakemake.output.components, sep='\t')
 
