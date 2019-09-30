@@ -111,7 +111,7 @@ def run_ICA(ICAmethod, data, M, max_it, tolerance, model_i):
 
 
 # Importating, formating and scaling the data
-data_slice = snakemake.config['ICA_datasets'][snakemake.wildcards.dataset]
+data_slice = snakemake.config['ICA_datasets'][snakemake.wildcards.dataset]['variables']
 dataset = Dataset(snakemake.input.counts, data_slice)
 
 # Setting parameters

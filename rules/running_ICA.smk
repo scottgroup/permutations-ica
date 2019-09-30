@@ -24,13 +24,13 @@ rule running_ICA:
             optimisation starting point.
     """
     input:
-        counts = lambda w: config['ICA_datasets']['{dataset}'.format(**w)]['counts']
+        counts = lambda w: config['ICA_datasets']['{dataset}'.format(**w)]['params']['counts']
     output:
         raw_components = temp("results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/raw_components.tsv"),
         fit_min = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/fit_min.txt"
     params:
         max_it = 50000,
-        tolerance = 1e-18
+        tolerance = 1e-20
     threads:
         32
     conda:
@@ -93,21 +93,6 @@ rule filter_sigma_components:
         "../scripts/running_ICA/4_filter_sigma_components.py"
 
 
-rule dataset_projection_on_filtered_components:
-    """
-
-    """
-    input:
-        counts = lambda w: config['ICA_datasets']['{dataset}'.format(**w)]['counts'],
-        components = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/filtered_components/sigma_{sigma}/components.tsv"
-    output:
-        projection = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/filtered_components/sigma_{sigma}/projection.tsv"
-    conda:
-        "../envs/ICA_python.yaml"
-    script:
-        "../scripts/running_ICA/5_dataset_projection_on_filt_comps.py"
-
-
 rule component_agnostic_model:
     """
 
@@ -116,10 +101,25 @@ rule component_agnostic_model:
         get_components_range
     output:
         components = "results/ICA/{ICAmethod}/{dataset}/combine_{min}to{max}_n{n}_std{std}/components.tsv",
-        corr_components = "results/ICA/{ICAmethod}/{dataset}/combine_{min}to{max}_n{n}_std{std}/correlated_components.json"
+        corr_components = "results/ICA/{ICAmethod}/{dataset}/combine_{min}to{max}_n{n}_std{std}/corr_components.json"
     params:
         threshold = 0.90
     conda:
         "../envs/ICA_python.yaml"
     script:
-        "../scripts/running_ICA/6_component_agnostic_model.py"
+        "../scripts/running_ICA/5_component_agnostic_model.py"
+
+
+rule dataset_projection_on_filtered_components:
+    """
+
+    """
+    input:
+        counts = lambda w: config['ICA_datasets']['{dataset}'.format(**w)]['params']['counts'],
+        components = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/filtered_components/sigma_{sigma}/components.tsv"
+    output:
+        projection = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/filtered_components/sigma_{sigma}/projection.tsv"
+    conda:
+        "../envs/ICA_python.yaml"
+    script:
+        "../scripts/running_ICA/6_dataset_projection_on_filt_comps.py"

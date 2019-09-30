@@ -1,5 +1,8 @@
 configfile: "config.json"
 
+import rules.running_ICA as running_ICA
+import rules.plotting_ICA as plotting_ICA
+
 # Defining wildcards constraints
 wildcard_constraints:
     dataset = "({})".format("|".join(config["ICA_datasets"].keys())),
@@ -9,21 +12,13 @@ wildcard_constraints:
 
 # Including rules
 include: "rules/running_ICA.smk"
+include: "rules/plotting_ICA.smk"
 
-# Defining variables
-M = range(10, 16)
-std = [0, 2, 4]
-datasets = ["counts_noNaN", "counts_NaN"]
-sigma = [1, 4, 9]
+# Defining model to run
+ICAruns = ["counts_noNaN", "counts_NaN"]
 
 
 rule all:
     input:
-        expand(
-            "results/ICA/sklearnFastICA/{dataset}/M{M}_n10_std{std}/filtered_components/sigma_{sigma}/projection.tsv",
-            M=M, std=std, dataset=datasets, sigma=sigma
-        ),
-        expand(
-            "results/ICA/sklearnFastICA/{dataset}/M{M}_n10_std{std}/dendrogram.png",
-            M=M, std=std, dataset=datasets, sigma=sigma
-        )
+        running_ICA.get_ICA_running(config, ICAruns),
+        plotting_ICA.get_ICA_plotting(config, ICAruns)

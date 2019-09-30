@@ -58,7 +58,7 @@ ind = fcluster(L, 0.1*d.max(), 'distance')
 print(ind)
 
 # Creating the figure
-fig = plt.figure()
+fig = plt.figure(figsize=(20,20))
 ax = fig.add_subplot(111)
 cax = ax.matshow(components.corr().values, interpolation=None, vmin=-1, vmax=1)
 # Adding colorbar

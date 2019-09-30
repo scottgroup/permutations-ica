@@ -14,7 +14,7 @@ threshold = snakemake.params.threshold
 Z = hierarchy.linkage(data.T, 'single')
 
 # Graphing
-plt.figure()
+plt.figure(figsize=(20,20))
 dn = hierarchy.dendrogram(
     Z,
     labels=data.columns,

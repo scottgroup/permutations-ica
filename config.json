@@ -19,11 +19,37 @@
   {
     "counts_noNaN":
     {
-        "counts": "data/counts_noNaN.tsv"
+        "params":
+        {
+            "counts": "data/counts_noNaN.tsv",
+            "ICAmethod": ["sklearnFastICA"],
+            "max": 17,
+            "min": 10,
+            "n": 25,
+            "sigma": [1, 4, 9],
+            "std": [0, 2, 4],
+            "threshold": 0.90
+        },
+        "variables":
+        {
+        }
     },
     "counts_NaN":
     {
-        "counts": "data/counts_NaN.tsv"
+        "params":
+        {
+            "counts": "data/counts_NaN.tsv",
+            "ICAmethod": ["sklearnFastICA"],
+            "max": 17,
+            "min": 10,
+            "n": 25,
+            "sigma": [1, 4, 9],
+            "std": [0, 2, 4],
+            "threshold": 0.90
+        },
+        "variables":
+        {
+        }
     }
   }
 }
