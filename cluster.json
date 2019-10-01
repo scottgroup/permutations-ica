@@ -17,48 +17,48 @@
     {
         "cpus-per-task": "1",
 	    "mem": "4000M",
-        "time": "0-30:00:00"
+        "time": "0-00:30:00"
     },
     "merging_n_components":
     {
         "cpus-per-task": "1",
 	    "mem": "4000M",
-        "time": "0-30:00:00"
+        "time": "0-00:30:00"
     },
     "filter_sigma_components":
     {
         "cpus-per-task": "1",
 	    "mem": "4000M",
-        "time": "0-30:00:00"
+        "time": "0-00:30:00"
     },
     "component_agnostic_model":
     {
         "cpus-per-task": "1",
 	    "mem": "4000M",
-        "time": "0-30:00:00"
+        "time": "0-00:30:00"
     },
     "dataset_projection_on_filtered_components":
     {
         "cpus-per-task": "1",
 	    "mem": "4000M",
-        "time": "0-30:00:00"
+        "time": "0-00:30:00"
     },
     "plotting_components_dendrogram":
     {
     	"cpus-per-task": "1",
 	    "mem": "4000M",
-	    "time": "0-0:15:00"
+	    "time": "0-00:15:00"
     },
     "plotting_components_corr":
     {
     	"cpus-per-task": "1",
 	    "mem": "4000M",
-	    "time": "0-0:15:00"
+	    "time": "0-00:15:00"
     },
     "plotting_component_projections":
     {
     	"cpus-per-task": "1",
 	    "mem": "4000M",
-	    "time": "0-0:25:00"
+	    "time": "0-00:25:00"
     }
 }
