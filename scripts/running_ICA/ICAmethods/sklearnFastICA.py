@@ -29,12 +29,16 @@ def sklearnFastICA(data, M, max_it, tolerance):
     # except ConvergenceWarning:
     #     return None
 
-    ICA.fit(np.array(data.T))
+    try:
+        ICA.fit(np.array(data.T))
+        print(ICA.n_iter_)
 
-    print(ICA.n_iter_)
+        if ICA.n_iter_ == max_it:
+            components = ICA.components_.T
+            return components
+        else:
+            return None
 
-    if ICA.n_iter_ == max_it:
-        components = ICA.components_.T
-        return components
-    else:
+    except ValueError as err:
+        print("Value error: {err}".format(err=err))
         return None
