@@ -15,11 +15,7 @@ include: "rules/running_ICA.smk"
 include: "rules/plotting_ICA.smk"
 
 # Defining model to run
-ICAruns = [
-    "counts_NaN", "counts_noNaN", 
-    "counts_NaN_dualAnnot", "counts_noNaN_dualAnnot",
-    "counts_NaN_dualAnnot_heart", "counts_noNaN_dualAnnot_heart"
-]
+ICAruns = list(config['ICA_datasets'].keys())
 
 
 rule all:

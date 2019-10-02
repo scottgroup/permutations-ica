@@ -61,7 +61,7 @@
             "min": 10,
             "n": 25,
             "sigma": [1, 4, 9],
-            "std": [2],
+            "std": [0, 2],
             "threshold": 0.90
         },
         "variables":
@@ -79,7 +79,7 @@
             "min": 10,
             "n": 25,
             "sigma": [1, 4, 9],
-            "std": [2],
+            "std": [0, 2],
             "threshold": 0.90
         },
         "variables":
@@ -97,7 +97,7 @@
             "min": 7,
             "n": 25,
             "sigma": [1, 4, 9],
-            "std": [2],
+            "std": [0, 2],
             "threshold": 0.90
         },
         "variables":
@@ -116,7 +116,7 @@
             "min": 7,
             "n": 25,
             "sigma": [1, 4, 9],
-            "std": [2],
+            "std": [0, 2],
             "threshold": 0.90
         },
         "variables":
@@ -124,7 +124,44 @@
             "annotation": ["ensembl", "refseq"],
             "tissue": ["heart"]
         }
+    },
+    "counts_NaN_dualAnnot_brain":
+    {
+        "params":
+        {
+            "counts": "data/counts_NaN.tsv",
+            "ICAmethod": ["sklearnFastICA"],
+            "max": 15,
+            "min": 7,
+            "n": 25,
+            "sigma": [1, 4, 9],
+            "std": [0, 2],
+            "threshold": 0.90
+        },
+        "variables":
+        {
+            "annotation": ["ensembl", "refseq"],
+            "tissue": ["brain"]
+        }
+    },
+        "counts_NaN_dualAnnot_brain":
+    {
+        "params":
+        {
+            "counts": "data/counts_NaN.tsv",
+            "ICAmethod": ["sklearnFastICA"],
+            "max": 15,
+            "min": 7,
+            "n": 25,
+            "sigma": [1, 4, 9],
+            "std": [0, 2],
+            "threshold": 0.90
+        },
+        "variables":
+        {
+            "annotation": ["ensembl", "refseq"],
+            "tissue": ["brain"]
+        }
     }
-    
   }
 }
