@@ -6,7 +6,7 @@ import rules.plotting_ICA as plotting_ICA
 # Defining wildcards constraints
 wildcard_constraints:
     dataset = "({})".format("|".join(config["ICA_datasets"].keys())),
-    ICAmethod = "sklearnFastICA",
+    ICAmethod = "({})".format("|".join(["sklearnFastICA", "consICA"])),
     std="[0-9]+"
 
 
@@ -16,6 +16,15 @@ include: "rules/plotting_ICA.smk"
 
 # Defining model to run
 ICAruns = list(config['ICA_datasets'].keys())
+
+
+# rule test:
+#     output:
+#         "stuff"
+#     conda:
+#         "envs/concICA.yaml"
+#     script:
+#         "scripts/running_ICA/ICAmethods/consICA.py"
 
 
 rule all:

@@ -1,0 +1,11 @@
+channels:
+  - default
+  - bioconda
+  - conda-forge
+  - r
+dependencies:
+  - numpy =1.16.4
+  - rpy2 =2.9.4
+  - r-dosnow =1.0.16
+  - r-domc =1.3.5
+  - r-fastica =1.2
