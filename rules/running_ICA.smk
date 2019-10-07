@@ -7,8 +7,7 @@ def get_components_range(wildcards):
     )
 
 
-
-rule running_ICA:
+rule running_consICA:
     """
         Running an ICA model on the data
 
@@ -26,8 +25,39 @@ rule running_ICA:
     input:
         counts = lambda w: config['ICA_datasets']['{dataset}'.format(**w)]['params']['counts']
     output:
-        raw_components = temp("results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/raw_components.tsv"),
-        fit_min = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/fit_min.txt"
+        raw_components = temp("results/ICA/consICA/{dataset}/M{M}_n{n}_std{std}/raw_components.tsv"),
+        fit_min = "results/ICA/consICA/{dataset}/M{M}_n{n}_std{std}/fit_min.txt"
+    params:
+        max_it = 50000,
+        tolerance = 1e-20
+    threads:
+        32
+    conda:
+        "../envs/consICA.yaml"
+    script:
+        "../scripts/running_ICA/1_running_consICA.py"
+
+
+rule running_sklearnFastICA:
+    """
+        Running an ICA model on the data
+
+        ICAmethod -> Specifies which model is being used. All methods are
+            hosted in the scripts/running_ICA/ICAmethods folder and they all
+            share the same Dataset object and preprocessing.
+        dataset -> Specifies the subset of data chosen. All datasets must be
+            defined in config.json under ICA_datasets as a dictionary where
+            each key is a variable, and each value a list of possible variable
+            states.
+        M -> Number of components to generate.
+        n -> Number of iteration. Each iteration only differs by the
+            optimisation starting point.
+    """
+    input:
+        counts = lambda w: config['ICA_datasets']['{dataset}'.format(**w)]['params']['counts']
+    output:
+        raw_components = temp("results/ICA/sklearnFastICA/{dataset}/M{M}_n{n}_std{std}/raw_components.tsv"),
+        fit_min = "results/ICA/sklearnFastICA/{dataset}/M{M}_n{n}_std{std}/fit_min.txt"
     params:
         max_it = 50000,
         tolerance = 1e-20
@@ -36,7 +66,7 @@ rule running_ICA:
     conda:
         "../envs/ICA_python.yaml"
     script:
-        "../scripts/running_ICA/1_running_ICA.py"
+        "../scripts/running_ICA/1_running_sklearnFastICA.py"
 
 
 rule flipping_ICA_components:
@@ -48,7 +78,7 @@ rule flipping_ICA_components:
         have a strong negative correlation.
     """
     input:
-        components = rules.running_ICA.output.raw_components
+        components = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/raw_components.tsv"
     output:
         components = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/components.tsv",
         corr_components =  "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/corr_components.json",
