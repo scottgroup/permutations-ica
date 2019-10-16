@@ -43,10 +43,16 @@
 	    "mem": "4000M",
         "time": "0-00:30:00"
     },
+    "bootstrapped_stability":
+    {
+        "cpus-per-task": "1",
+	    "mem": "4000M",
+        "time": "0-00:30:00"
+    },
     "plotting_components_dendrogram":
     {
     	"cpus-per-task": "1",
-	"mem": "4000M"
+	    "mem": "4000M"
     },
     "plotting_components_corr":
     {
@@ -54,6 +60,11 @@
         "mem": "4000M"
     },
     "plotting_component_projections":
+    {
+    	"cpus-per-task": "1",
+        "mem": "4000M"
+    },
+    "plotting_M_stability":
     {
     	"cpus-per-task": "1",
         "mem": "4000M"

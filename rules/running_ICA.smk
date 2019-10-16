@@ -168,8 +168,8 @@ rule running_sklearnFastICA_bootstraped:
         components = "results/ICA/sklearnFastICA/{dataset}/M{M}_n{n}_std{std}/stability/components_{boot}_strapped.tsv",
         fit_min = "results/ICA/sklearnFastICA/{dataset}/M{M}_n{n}_std{std}/stability/fit_min_{boot}_strapped.txt"
     params:
-        max_it = 10000,
-        tolerance = 1e-25
+        max_it = 50000,
+        tolerance = 1e-20
     threads:
         32
     conda:
