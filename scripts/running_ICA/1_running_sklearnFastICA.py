@@ -58,11 +58,23 @@ data = pd.DataFrame(
     index=data.index, columns=data.columns
 )
 
-# Bootstrapping the ICA
+# Iterating the ICA
 fit_min = list()
 i = 0
 while i < n:
-    _components, crit0 = run_ICA(data, M, max_it, tolerance, i)
+    # Subselecting data if bootstrapped
+    if 'boot' in snakemake.wildcards.keys():
+        n_columns = len(data.columns)
+        rand_columns = np.random.choice(
+            n_columns,
+            int(int(snakemake.wildcards.boot)/100*n_columns),
+            replace=False
+        )
+        sub_data = data[data.columns[rand_columns]]
+    else:
+        sub_data = data
+
+    _components, crit0 = run_ICA(sub_data, M, max_it, tolerance, i)
 
     if _components is not None:
         print('Success ', str(i))
@@ -77,7 +89,7 @@ while i < n:
 
 
 # Writing components to disk
-components.to_csv(snakemake.output.raw_components, sep='\t')
+components.to_csv(snakemake.output.components, sep='\t')
 
 # Writing fit minimum to disk
 with open(snakemake.output.fit_min, 'w') as f:

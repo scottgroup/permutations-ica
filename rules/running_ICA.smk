@@ -56,7 +56,7 @@ rule running_sklearnFastICA:
     input:
         counts = lambda w: config['ICA_datasets']['{dataset}'.format(**w)]['params']['counts']
     output:
-        raw_components = temp("results/ICA/sklearnFastICA/{dataset}/M{M}_n{n}_std{std}/raw_components.tsv"),
+        components = temp("results/ICA/sklearnFastICA/{dataset}/M{M}_n{n}_std{std}/raw_components.tsv"),
         fit_min = "results/ICA/sklearnFastICA/{dataset}/M{M}_n{n}_std{std}/fit_min.txt"
     params:
         max_it = 50000,
@@ -153,3 +153,38 @@ rule dataset_projection_on_filtered_components:
         "../envs/ICA_python.yaml"
     script:
         "../scripts/running_ICA/6_dataset_projection_on_filt_comps.py"
+
+
+rule running_sklearnFastICA_bootstraped:
+    """
+        Same as rule.running_sklearnFastICA.
+
+        Except : Adding a bootstrapped parameter, generating components using
+        {boot}% of original data.
+    """
+    input:
+        counts = lambda w: config['ICA_datasets']['{dataset}'.format(**w)]['params']['counts']
+    output:
+        components = "results/ICA/sklearnFastICA/{dataset}/M{M}_n{n}_std{std}/stability/components_{boot}_strapped.tsv",
+        fit_min = "results/ICA/sklearnFastICA/{dataset}/M{M}_n{n}_std{std}/stability/fit_min_{boot}_strapped.txt"
+    params:
+        max_it = 10000,
+        tolerance = 1e-25
+    threads:
+        32
+    conda:
+        "../envs/ICA_python.yaml"
+    script:
+        "../scripts/running_ICA/1_running_sklearnFastICA.py"
+
+
+rule bootstrapped_stability:
+    input:
+        components = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/components_mean.tsv",
+        boot_components = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/stability/components_{boot}_strapped.tsv",
+    output:
+        "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/stability/{boot}_analysis.tsv",
+    conda:
+        "../envs/ICA_python.yaml"
+    script:
+        "../scripts/running_ICA/7_bootstrapped_stability.py"

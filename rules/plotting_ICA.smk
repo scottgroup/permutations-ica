@@ -1,6 +1,10 @@
 
-def get_plots():
-    pass
+def get_components(wildcards):
+    return expand(
+        "results/ICA/{{ICAmethod}}/{{dataset}}/M{M}_n{{n}}_std{{std}}/components.tsv",
+        M=range(int(wildcards.min), int(wildcards.max)+1)
+    )
+
 
 
 rule plotting_components_dendrogram:
@@ -53,3 +57,17 @@ rule plotting_component_projections:
         "../envs/ICA_python.yaml"
     script:
         "../scripts/plotting_ICA/plotting_component_projections.py"
+
+
+rule plotting_M_stability:
+    """
+        Plotting block_pearson score for every M
+    """
+    input:
+        get_components
+    output:
+        plot = "results/ICA/{ICAmethod}/{dataset}/combine_{min}to{max}_n{n}_std{std}/M_stability.png"
+    conda:
+        "../envs/ICA_python.yaml"
+    script:
+        "../scripts/plotting_ICA/plotting_M_stability.py"
