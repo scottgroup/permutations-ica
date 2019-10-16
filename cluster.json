@@ -46,19 +46,16 @@
     "plotting_components_dendrogram":
     {
     	"cpus-per-task": "1",
-	    "mem": "4000M",
-	    "time": "0-00:15:00"
+	"mem": "4000M"
     },
     "plotting_components_corr":
     {
     	"cpus-per-task": "1",
-	    "mem": "4000M",
-	    "time": "0-00:15:00"
+        "mem": "4000M"
     },
     "plotting_component_projections":
     {
     	"cpus-per-task": "1",
-	    "mem": "4000M",
-	    "time": "0-00:25:00"
+        "mem": "4000M"
     }
 }
