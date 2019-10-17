@@ -9,7 +9,11 @@
         "mail-user": "joel.simoneau@usherbrooke.ca",
         "mail-type": "FAIL"
     },
-    "running_ICA":
+    "running_sklearnFastICA":
+    {
+    	"time": "0-6:00:00"
+    },
+    "running_sklearnFastICA_bootstraped":
     {
     	"time": "0-6:00:00"
     },
