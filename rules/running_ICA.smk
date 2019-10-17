@@ -23,10 +23,10 @@ rule running_consICA:
             optimisation starting point.
     """
     input:
-        counts = lambda w: config['ICA_datasets']['{dataset}'.format(**w)]['params']['counts']
+        counts = lambda w: config['ICA_datasets']['{dataset}'.format(**w)]['params']['counts'],
     output:
         raw_components = temp("results/ICA/consICA/{dataset}/M{M}_n{n}_std{std}/raw_components.tsv"),
-        fit_min = "results/ICA/consICA/{dataset}/M{M}_n{n}_std{std}/fit_min.txt"
+        fit_min = "results/ICA/consICA/{dataset}/M{M}_n{n}_std{std}/fit_min.txt",
     params:
         max_it = 50000,
         tolerance = 1e-20
@@ -54,10 +54,10 @@ rule running_sklearnFastICA:
             optimisation starting point.
     """
     input:
-        counts = lambda w: config['ICA_datasets']['{dataset}'.format(**w)]['params']['counts']
+        counts = lambda w: config['ICA_datasets']['{dataset}'.format(**w)]['params']['counts'],
     output:
         components = temp("results/ICA/sklearnFastICA/{dataset}/M{M}_n{n}_std{std}/raw_components.tsv"),
-        fit_min = "results/ICA/sklearnFastICA/{dataset}/M{M}_n{n}_std{std}/fit_min.txt"
+        fit_min = "results/ICA/sklearnFastICA/{dataset}/M{M}_n{n}_std{std}/fit_min.txt",
     params:
         max_it = 50000,
         tolerance = 1e-20
@@ -78,7 +78,7 @@ rule flipping_ICA_components:
         have a strong negative correlation.
     """
     input:
-        components = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/raw_components.tsv"
+        components = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/raw_components.tsv",
     output:
         components = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/components.tsv",
         corr_components =  "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/corr_components.json",
@@ -98,10 +98,10 @@ rule merging_n_components:
     """
     input:
         components = "results/{ICA_path}/components.tsv",
-        corr_components = "results/{ICA_path}/corr_components.json"
+        corr_components = "results/{ICA_path}/corr_components.json",
     output:
         components_mean = "results/{ICA_path}/components_mean.tsv",
-        components_std = "results/{ICA_path}/components_std.tsv"
+        components_std = "results/{ICA_path}/components_std.tsv",
     conda:
         "../envs/ICA_python.yaml"
     script:
@@ -114,9 +114,9 @@ rule filter_sigma_components:
         components, keeping only gene that are sigma sigma away from mean.
     """
     input:
-        components_mean = rules.merging_n_components.output.components_mean
+        components_mean = rules.merging_n_components.output.components_mean,
     output:
-        filt_genes = "results/{ICA_path}/filtered_components/sigma_{sigma}/components.tsv"
+        filt_genes = "results/{ICA_path}/filtered_components/sigma_{sigma}/components.tsv",
     conda:
         "../envs/ICA_python.yaml"
     script:
@@ -131,7 +131,7 @@ rule component_agnostic_model:
         get_components_range
     output:
         components = "results/ICA/{ICAmethod}/{dataset}/combine_{min}to{max}_n{n}_std{std}/components.tsv",
-        corr_components = "results/ICA/{ICAmethod}/{dataset}/combine_{min}to{max}_n{n}_std{std}/corr_components.json"
+        corr_components = "results/ICA/{ICAmethod}/{dataset}/combine_{min}to{max}_n{n}_std{std}/corr_components.json",
     params:
         threshold = 0.90
     conda:
@@ -146,13 +146,51 @@ rule dataset_projection_on_filtered_components:
     """
     input:
         counts = lambda w: config['ICA_datasets']['{dataset}'.format(**w)]['params']['counts'],
-        components = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/filtered_components/sigma_{sigma}/components.tsv"
+        components = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/filtered_components/sigma_{sigma}/components.tsv",
     output:
-        projection = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/filtered_components/sigma_{sigma}/projection.tsv"
+        projection = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/filtered_components/sigma_{sigma}/projection.tsv",
     conda:
         "../envs/ICA_python.yaml"
     script:
         "../scripts/running_ICA/6_dataset_projection_on_filt_comps.py"
+
+
+rule dataset_variable_boolean:
+    input:
+        counts = lambda w: config['ICA_datasets']['{dataset}'.format(**w)]['params']['counts'],
+    output:
+        var_bool = "results/ICA/variable_boolean/{dataset}.tsv",
+    conda:
+        "../envs/ICA_python.yaml"
+    script:
+        "../scripts/running_ICA/7_dataset_variable_boolean.py"
+
+
+rule projection_boolean_correlation:
+    input:
+        projection = rules.dataset_projection_on_filtered_components.output.projection,
+        var_bool = rules.dataset_variable_boolean.output.var_bool,
+    output:
+        proj_corr = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/filtered_components/sigma_{sigma}/projection_correlation.tsv",
+    conda:
+        "../envs/ICA_python.yaml"
+    script:
+        "../scripts/running_ICA/8_projection_boolean_correlation.py"
+
+
+rule list_distribution_component:
+    """
+        TODO : generates NaN on pearson. Okay? Need to filter?
+    """
+    input:
+        proj_corr = rules.projection_boolean_correlation.output.proj_corr,
+        var_bool = rules.dataset_variable_boolean.output.var_bool,
+    output:
+        list_comp = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/filtered_components/sigma_{sigma}/comp_list.txt",
+    conda:
+        "../envs/ICA_python.yaml"
+    script:
+        "../scripts/running_ICA/9_list_distribution_component.py"
 
 
 rule running_sklearnFastICA_bootstraped:
@@ -163,10 +201,10 @@ rule running_sklearnFastICA_bootstraped:
         {boot}% of original data.
     """
     input:
-        counts = lambda w: config['ICA_datasets']['{dataset}'.format(**w)]['params']['counts']
+        counts = lambda w: config['ICA_datasets']['{dataset}'.format(**w)]['params']['counts'],
     output:
         components = "results/ICA/sklearnFastICA/{dataset}/M{M}_n{n}_std{std}/stability/components_{boot}_strapped.tsv",
-        fit_min = "results/ICA/sklearnFastICA/{dataset}/M{M}_n{n}_std{std}/stability/fit_min_{boot}_strapped.txt"
+        fit_min = "results/ICA/sklearnFastICA/{dataset}/M{M}_n{n}_std{std}/stability/fit_min_{boot}_strapped.txt",
     params:
         max_it = 50000,
         tolerance = 1e-20
@@ -179,15 +217,18 @@ rule running_sklearnFastICA_bootstraped:
 
 
 rule bootstrapped_stability:
+    """
+
+    """
     input:
         components = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/components_mean.tsv",
-        boot_components = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/stability/components_{boot}_strapped.tsv"
+        boot_components = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/stability/components_{boot}_strapped.tsv",
     output:
         # "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/stability/{boot}_analysis.tsv"
-        plot = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/stability/{boot}_analysis.png"
+        plot = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/stability/{boot}_analysis.png",
     params:
         min_correlation = 0.75
     conda:
         "../envs/ICA_python.yaml"
     script:
-        "../scripts/running_ICA/7_bootstrapped_stability.py"
+        "../scripts/running_ICA/12_bootstrapped_stability.py"
