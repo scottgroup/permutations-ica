@@ -1,7 +1,7 @@
 
 rule GO_analysis:
     input:
-        "results/{ICA_path}/gene_list/comp_sigma{sigma}/"
+        gene_list = "results/{ICA_path}/gene_list/comp_sigma{sigma}/.tkn"
     output:
         plot_up = "results/{ICA_path}/gene_list/comp_sigma{sigma}/GO_comp{comp}_up.png",
         plot_down = "results/{ICA_path}/gene_list/comp_sigma{sigma}/GO_comp{comp}_down.png"
@@ -10,4 +10,4 @@ rule GO_analysis:
     conda:
         "../envs/gprofiler.yaml"
     script:
-        "../scripts/analyse_ICA/gprofiler.py"
+        "../scripts/analyse_ICA/GO_analysis.py"

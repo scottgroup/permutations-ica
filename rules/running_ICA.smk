@@ -197,7 +197,9 @@ rule extracting_gene_list:
     input:
         filt_genes = rules.filter_sigma_components.output.filt_genes
     output:
-        gene_list = directory("results/{ICA_path}/gene_list/comp_sigma{sigma}")
+        gene_list = "results/{ICA_path}/gene_list/comp_sigma{sigma}/.tkn"
+    params:
+        directory = "results/{ICA_path}/gene_list/comp_sigma{sigma}"
     conda:
         "../envs/ICA_python.yaml"
     script:

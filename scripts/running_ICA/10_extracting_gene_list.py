@@ -18,9 +18,9 @@ for comp in filtered_genes.columns:
     _genes_list_down = _genes_down.index.get_level_values('ensembl_id').tolist()
 
     # Writing genes to file
-    os.makedirs(snakemake.output.gene_list, exist_ok=True)
+    os.makedirs(snakemake.params.directory, exist_ok=True)
     file_path = os.path.join(
-        snakemake.output.gene_list,
+        snakemake.params.directory,
         "comp_{comp}.txt".format(comp=comp)
     )
 
