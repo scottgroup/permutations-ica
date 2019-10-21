@@ -78,5 +78,10 @@
     {
         "cpus-per-task": "1",
         "mem": "4000M"
+    },
+    "GO_analysis":
+    {
+        "cpus-per-task": "1",
+        "mem": "4000M"
     }
 }
