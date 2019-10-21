@@ -46,8 +46,8 @@ def get_gene_overlap(upref, downref, uptest, downtest):
     # overflow_down = [g for g in downtest if g not in downref]
 
     return max([
-        len(overlap_up / len(upref)),
-        len(overlap_down / len(downref)),
+        len(overlap_up) / len(upref),
+        len(overlap_down) / len(downref),
     ])
     # return (len(overlap_up) + len(overlap_down)) / (len(upref) + len(downref))
 
