@@ -193,6 +193,17 @@ rule list_distribution_component:
         "../scripts/running_ICA/9_list_distribution_component.py"
 
 
+rule extracting_gene_list:
+    input:
+        filt_genes = rules.filter_sigma_components.output.filt_genes
+    output:
+        gene_list = directory("results/{ICA_path}/gene_list/comp_sigma{sigma}")
+    conda:
+        "../envs/ICA_python.yaml"
+    script:
+        "../scripts/running_ICA/10_extracting_gene_list.py"
+
+
 rule running_sklearnFastICA_bootstraped:
     """
         Same as rule.running_sklearnFastICA.
@@ -216,7 +227,7 @@ rule running_sklearnFastICA_bootstraped:
         "../scripts/running_ICA/1_running_sklearnFastICA.py"
 
 
-rule bootstrapped_stability:
+rule bootstrapped_stability_correlation:
     """
 
     """
@@ -231,4 +242,23 @@ rule bootstrapped_stability:
     conda:
         "../envs/ICA_python.yaml"
     script:
-        "../scripts/running_ICA/12_bootstrapped_stability.py"
+        "../scripts/running_ICA/12_bootstrapped_stability_correlation.py"
+
+
+rule bootstrapped_stability_n_genes:
+    """
+
+    """
+    input:
+        components = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/components_mean.tsv",
+        boot_components = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/stability/components_{boot}_strapped.tsv",
+    output:
+        # "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/stability/{boot}_analysis.tsv"
+        plot = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/stability/{boot}_analysis_n_genes.png",
+    params:
+        sigma = 4,
+        min_genes = 0.50
+    conda:
+        "../envs/ICA_python.yaml"
+    script:
+        "../scripts/running_ICA/12_bootstrapped_stability_n_genes.py"
