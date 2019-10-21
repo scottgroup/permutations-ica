@@ -42,10 +42,14 @@ def get_gene_overlap(upref, downref, uptest, downtest):
     overlap_up = [g for g in upref if g in uptest]
     overlap_down = [g for g in downref if g in downtest]
 
-    overflow_up = [g for g in uptest if g not in upref]
-    overflow_down = [g for g in downtest if g not in downref]
+    # overflow_up = [g for g in uptest if g not in upref]
+    # overflow_down = [g for g in downtest if g not in downref]
 
-    return (len(overlap_up) + len(overlap_down)) / (len(upref) + len(downref))
+    return max([
+        len(overlap_up / len(upref)),
+        len(overlap_down / len(downref)),
+    ])
+    # return (len(overlap_up) + len(overlap_down)) / (len(upref) + len(downref))
 
 
 def quant_similar_genes(cref, ctest):
