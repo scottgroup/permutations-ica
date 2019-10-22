@@ -47,6 +47,30 @@
         "mem": "4000M",
         "time": "0-00:30:00"
     },
+    "extracting_gene_list":
+    {
+        "cpus-per-task": "1",
+        "mem": "4000M",
+        "time": "0-00:30:00"
+    },
+    "dataset_variable_boolean":
+    {
+        "cpus-per-task": "1",
+        "mem": "4000M",
+        "time": "0-00:30:00"
+    },
+    "projection_boolean_correlation":
+    {
+        "cpus-per-task": "1",
+        "mem": "4000M",
+        "time": "0-00:30:00"
+    },
+    "list_distribution_component":
+    {
+        "cpus-per-task": "1",
+        "mem": "4000M",
+        "time": "0-00:30:00"
+    },
     "bootstrapped_stability_correlation":
     {
         "cpus-per-task": "1",
