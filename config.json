@@ -1,12 +1,10 @@
 {
   "datasets":
   {
-    "adrenal_gland": ["ERR315335", "ERR315392"],
-    "brain": ["ERR315432", "ERR315455"],
-    "colon": ["ERR315348", "ERR315462"],
-    "heart": ["ERR315328", "ERR315331"],
-    "testis": ["ERR315351", "ERR315492"],
-    "thyroid": ["ERR315422", "ERR315397"]
+    "colon": ["ERR315348", "ERR315462", "ERR315400", "ERR315357"],
+    "heart": ["ERR315328", "ERR315331", "ERR315356", "ERR315384"],
+    "testis": ["ERR315351", "ERR315492", "ERR315352", "ERR315456"],
+    "thyroid": ["ERR315422", "ERR315397", "ERR315412", "ERR315428"]
   },
   "tools":
   {

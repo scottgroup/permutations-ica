@@ -14,6 +14,7 @@ wildcard_constraints:
 include: "rules/running_ICA.smk"
 include: "rules/plotting_ICA.smk"
 include: "rules/analyse_ICA.smk"
+include: "rules/DEGs.smk"
 
 # Defining model to run
 ICAruns = list(config['ICA_datasets'].keys())
