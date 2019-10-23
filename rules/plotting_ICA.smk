@@ -71,3 +71,17 @@ rule plotting_M_stability:
         "../envs/ICA_python.yaml"
     script:
         "../scripts/plotting_ICA/plotting_M_stability.py"
+
+
+rule plotting_distribution_grid:
+    """
+    """
+    input:
+        proj = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/filtered_components/sigma_{sigma}/projection.tsv",
+        comp_list = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/filtered_components/sigma_{sigma}/comp_list.txt"
+    output:
+        "results/ICA/{ICAmethod}/{dataset}/plots/{ICA_run}/sigma_{sigma}/grid.png"
+    conda:
+        "../envs/ICA_python.yaml"
+    script:
+        "../scripts/plotting_ICA/plotting_distribution_grid.py"

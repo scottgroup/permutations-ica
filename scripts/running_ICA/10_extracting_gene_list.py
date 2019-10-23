@@ -1,6 +1,8 @@
 import os
 import pandas as pd
 
+from pathlib import Path
+
 # Importing data
 filtered_genes = pd.read_csv(
     snakemake.input.filt_genes, sep='\t', index_col=[0, 1, 2, 3]
@@ -32,3 +34,5 @@ for comp in filtered_genes.columns:
         f.write('>Negative genes\n')
         for gene in _genes_list_down:
             f.write(gene + '\n')
+
+Path(snakemake.output.tkn).touch(exist_ok=True)

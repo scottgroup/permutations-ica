@@ -11,7 +11,7 @@ def get_ICA_running(configs, datasets):
     files = list()
 
     for dataset in datasets:
-        
+
         # Loading config
         config = configs['ICA_datasets'][dataset]['params']
         config['dataset'] = dataset

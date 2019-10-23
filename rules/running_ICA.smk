@@ -56,7 +56,7 @@ rule running_sklearnFastICA:
     input:
         counts = lambda w: config['ICA_datasets']['{dataset}'.format(**w)]['params']['counts'],
     output:
-        components = temp("results/ICA/sklearnFastICA/{dataset}/M{M}_n{n}_std{std}/raw_components.tsv"),
+        # components = temp("results/ICA/sklearnFastICA/{dataset}/M{M}_n{n}_std{std}/raw_components.tsv"),
         fit_min = "results/ICA/sklearnFastICA/{dataset}/M{M}_n{n}_std{std}/fit_min.txt",
     params:
         max_it = 50000,
@@ -97,11 +97,11 @@ rule merging_n_components:
         into single components.
     """
     input:
-        components = "results/{ICA_path}/components.tsv",
-        corr_components = "results/{ICA_path}/corr_components.json",
+        components = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/components.tsv",
+        corr_components = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/corr_components.json",
     output:
-        components_mean = "results/{ICA_path}/components_mean.tsv",
-        components_std = "results/{ICA_path}/components_std.tsv",
+        components_mean = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/components_mean.tsv",
+        components_std = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/components_std.tsv",
     conda:
         "../envs/ICA_python.yaml"
     script:
@@ -116,7 +116,7 @@ rule filter_sigma_components:
     input:
         components_mean = rules.merging_n_components.output.components_mean,
     output:
-        filt_genes = "results/{ICA_path}/filtered_components/sigma_{sigma}/components.tsv",
+        filt_genes = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/filtered_components/sigma_{sigma}/components.tsv",
     conda:
         "../envs/ICA_python.yaml"
     script:
@@ -197,9 +197,9 @@ rule extracting_gene_list:
     input:
         filt_genes = rules.filter_sigma_components.output.filt_genes
     output:
-        gene_list = "results/{ICA_path}/gene_list/comp_sigma{sigma}/.tkn"
+        tkn = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/gene_list/comp_sigma{sigma}/.tkn"
     params:
-        directory = "results/{ICA_path}/gene_list/comp_sigma{sigma}"
+        directory = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/gene_list/comp_sigma{sigma}"
     conda:
         "../envs/ICA_python.yaml"
     script:

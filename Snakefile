@@ -10,7 +10,6 @@ wildcard_constraints:
     std="[0-9]+",
     sigma="[0-9]+"
 
-
 # Including rules
 include: "rules/running_ICA.smk"
 include: "rules/plotting_ICA.smk"
