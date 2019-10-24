@@ -15,150 +15,22 @@
   },
   "ICA_datasets":
   {
-    "counts_noNaN":
+    "tissues_NaN_tripleAnnot":
     {
         "params":
         {
-            "counts": "data/counts_noNaN.tsv",
+            "counts": "data/tissues_NaN.tsv",
             "ICAmethod": ["sklearnFastICA"],
-            "max": 17,
-            "min": 10,
+            "max": 35,
+            "min": 6,
             "n": 25,
-            "sigma": [1, 4, 9],
-            "std": [0, 2, 4],
+            "sigma": [4],
+            "std": [0],
             "threshold": 0.90
         },
         "variables":
         {
-        }
-    },
-    "counts_NaN":
-    {
-        "params":
-        {
-            "counts": "data/counts_NaN.tsv",
-            "ICAmethod": ["sklearnFastICA"],
-            "max": 17,
-            "min": 10,
-            "n": 25,
-            "sigma": [1, 4, 9],
-            "std": [0, 2, 4],
-            "threshold": 0.90
-        },
-        "variables":
-        {
-        }
-    },
-    "counts_NaN_dualAnnot":
-    {
-        "params":
-        {
-            "counts": "data/counts_NaN.tsv",
-            "ICAmethod": ["sklearnFastICA"],
-            "max": 17,
-            "min": 10,
-            "n": 25,
-            "sigma": [1, 4, 9],
-            "std": [0, 2],
-            "threshold": 0.90
-        },
-        "variables":
-        {
-	    "annotation": ["ensembl", "refseq"]
-        }
-    },
-    "counts_noNaN_dualAnnot":
-    {
-        "params":
-        {
-            "counts": "data/counts_noNaN.tsv",
-            "ICAmethod": ["sklearnFastICA"],
-            "max": 17,
-            "min": 10,
-            "n": 25,
-            "sigma": [1, 4, 9],
-            "std": [0, 2],
-            "threshold": 0.90
-        },
-        "variables":
-        {
-	    "annotation": ["ensembl", "refseq"]
-        }
-    },
-    "counts_noNaN_dualAnnot_heart":
-    {
-        "params":
-        {
-            "counts": "data/counts_noNaN.tsv",
-            "ICAmethod": ["sklearnFastICA"],
-            "max": 15,
-            "min": 7,
-            "n": 25,
-            "sigma": [1, 4, 9],
-            "std": [0, 2],
-            "threshold": 0.90
-        },
-        "variables":
-        {
-            "annotation": ["ensembl", "refseq"],
-	    "tissue": ["heart"]
-        }
-    },
-    "counts_NaN_dualAnnot_heart":
-    {
-        "params":
-        {
-            "counts": "data/counts_NaN.tsv",
-            "ICAmethod": ["sklearnFastICA"],
-            "max": 15,
-            "min": 7,
-            "n": 25,
-            "sigma": [1, 4, 9],
-            "std": [0, 2],
-            "threshold": 0.90
-        },
-        "variables":
-        {
-            "annotation": ["ensembl", "refseq"],
-            "tissue": ["heart"]
-        }
-    },
-    "counts_NaN_dualAnnot_brain":
-    {
-        "params":
-        {
-            "counts": "data/counts_NaN.tsv",
-            "ICAmethod": ["sklearnFastICA"],
-            "max": 15,
-            "min": 7,
-            "n": 25,
-            "sigma": [1, 4, 9],
-            "std": [0, 2],
-            "threshold": 0.90
-        },
-        "variables":
-        {
-            "annotation": ["ensembl", "refseq"],
-            "tissue": ["brain"]
-        }
-    },
-    "counts_noNaN_dualAnnot_brain":
-    {
-        "params":
-        {
-            "counts": "data/counts_noNaN.tsv",
-            "ICAmethod": ["sklearnFastICA"],
-            "max": 15,
-            "min": 7,
-            "n": 25,
-            "sigma": [1, 4, 9],
-            "std": [0, 2],
-            "threshold": 0.90
-        },
-        "variables":
-        {
-            "annotation": ["ensembl", "refseq"],
-            "tissue": ["brain"]
+            "annotation": ["ensembl92", "ensembl", "refseq"]
         }
     },
     "tissues_NaN_dualAnnot":
@@ -167,10 +39,10 @@
         {
             "counts": "data/tissues_NaN.tsv",
             "ICAmethod": ["sklearnFastICA"],
-            "max": 22,
-            "min": 10,
+            "max": 35,
+            "min": 6,
             "n": 25,
-            "sigma": [1, 4, 9],
+            "sigma": [4],
             "std": [0],
             "threshold": 0.90
         },
@@ -185,10 +57,10 @@
         {
             "counts": "data/tissues_noNaN.tsv",
             "ICAmethod": ["sklearnFastICA"],
-            "max": 22,
-            "min": 10,
+            "max": 35,
+            "min": 6,
             "n": 25,
-            "sigma": [1, 4, 9],
+            "sigma": [4],
             "std": [0],
             "threshold": 0.90
         },
