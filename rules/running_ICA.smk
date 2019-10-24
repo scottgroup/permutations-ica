@@ -56,7 +56,7 @@ rule running_sklearnFastICA:
     input:
         counts = lambda w: config['ICA_datasets']['{dataset}'.format(**w)]['params']['counts'],
     output:
-        # components = temp("results/ICA/sklearnFastICA/{dataset}/M{M}_n{n}_std{std}/raw_components.tsv"),
+        components = temp("results/ICA/sklearnFastICA/{dataset}/M{M}_n{n}_std{std}/raw_components.tsv"),
         fit_min = "results/ICA/sklearnFastICA/{dataset}/M{M}_n{n}_std{std}/fit_min.txt",
     params:
         max_it = 50000,
@@ -97,11 +97,11 @@ rule merging_n_components:
         into single components.
     """
     input:
-        components = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/components.tsv",
-        corr_components = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/corr_components.json",
+        components = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/components.tsv",
+        corr_components = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/corr_components.json",
     output:
-        components_mean = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/components_mean.tsv",
-        components_std = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/components_std.tsv",
+        components_mean = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/components_mean.tsv",
+        components_std = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/components_std.tsv",
     conda:
         "../envs/ICA_python.yaml"
     script:
@@ -114,9 +114,9 @@ rule filter_sigma_components:
         components, keeping only gene that are sigma sigma away from mean.
     """
     input:
-        components_mean = rules.merging_n_components.output.components_mean,
+        components_mean = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/components_mean.tsv",
     output:
-        filt_genes = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/filtered_components/sigma_{sigma}/components.tsv",
+        filt_genes = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/filtered_components/sigma_{sigma}/components.tsv",
     conda:
         "../envs/ICA_python.yaml"
     script:

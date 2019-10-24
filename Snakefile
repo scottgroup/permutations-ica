@@ -20,15 +20,6 @@ include: "rules/DEGs.smk"
 ICAruns = list(config['ICA_datasets'].keys())
 
 
-# rule test:
-#     output:
-#         "stuff"
-#     conda:
-#         "envs/concICA.yaml"
-#     script:
-#         "scripts/running_ICA/ICAmethods/consICA.py"
-
-
 rule all:
     input:
         running_ICA.get_ICA_running(config, ICAruns),
