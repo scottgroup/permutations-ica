@@ -24,7 +24,7 @@ rule init_DESeq2:
     conda:
         "../envs/DESeq2.yaml"
     threads:
-        16
+        32
     script:
         "../scripts/DEGs/2_init_DESeq2.R"
 
@@ -39,7 +39,7 @@ rule DESeq2:
     log:
         "logs/DESeq2/DESeq2_{dataset}/{variable}_{tool}_{tool2}.log"
     threads:
-        16
+        32
     script:
         "../scripts/DEGs/3_DESeq2.R"
 

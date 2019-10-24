@@ -107,5 +107,23 @@
     {
         "cpus-per-task": "1",
         "mem": "4000M"
+    },
+    "prepare_data_for_DESeq2":
+    {
+        "cpus-per-task": "1",
+        "mem": "4000M"
+    },
+    "init_DESeq2":
+    {
+        "time": "0-12:00:00"
+    },
+    "DESeq2":
+    {
+        "time": "0-06:00:00"
+    },
+    "analyze_DESeq2":
+    {
+        "cpus-per-task": "1",
+        "mem": "4000M"
     }
 }
