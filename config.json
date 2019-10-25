@@ -33,7 +33,25 @@
             "annotation": ["ensembl92", "ensembl", "refseq"]
         }
     },
-    "tissues_NaN_dualAnnot":
+    "tissues_noNaN_tripleAnnot":
+    {
+        "params":
+        {
+            "counts": "data/tissues_noNaN.tsv",
+            "ICAmethod": ["sklearnFastICA"],
+            "max": 35,
+            "min": 6,
+            "n": 25,
+            "sigma": [4],
+            "std": [0],
+            "threshold": 0.90
+        },
+        "variables":
+        {
+            "annotation": ["ensembl92", "ensembl", "refseq"]
+        }
+    },
+     "tissues_NaN_dualAnnot":
     {
         "params":
         {
