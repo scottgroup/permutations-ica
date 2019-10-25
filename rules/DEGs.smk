@@ -1,4 +1,4 @@
-from DEGs import get_DEG_inputs
+from DEGs import get_DEG_results
 
 
 rule prepare_data_for_DESeq2:
@@ -44,17 +44,16 @@ rule DESeq2:
         "../scripts/DEGs/3_DESeq2.R"
 
 
-rule analyze_DESeq2:
-    """ TODO : rework this function """
-    input:
-        DEGs = lambda w: get_DEG_inputs("{dataset}".format(**w), config),
-        # hgnc = "data/references/hgnc.txt"
-    output:
-        "something_{dataset}"
-    params:
-        fold_change = 1,
-        pvalue = 0.00000001
-    conda:
-        "../envs/ICA_python.yaml"
-    script:
-        "../scripts/DEGs/analyze_DESeq2.py"
+# rule DESeq2_volcano_plot:
+#     """ TODO : rework this function """
+#     input:
+#         DEGs = lambda w: get_DEG_results(config, "{dataset}".format(**w))
+#     output:
+#         "something_{dataset}"
+#     params:
+#         fold_change = 1,
+#         pvalue = 0.00000001
+#     conda:
+#         "../envs/ICA_python.yaml"
+#     script:
+#         "../scripts/DEGs/4_DESeq2_volcano_plot.py"

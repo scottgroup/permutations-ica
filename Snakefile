@@ -2,6 +2,7 @@ configfile: "config.json"
 
 import rules.running_ICA as running_ICA
 import rules.plotting_ICA as plotting_ICA
+import rules.DEGs as DEGs
 
 # Defining wildcards constraints
 wildcard_constraints:
@@ -23,4 +24,5 @@ ICAruns = list(config['ICA_datasets'].keys())
 rule all:
     input:
         running_ICA.get_ICA_running(config, ICAruns),
-        plotting_ICA.get_ICA_plotting(config, ICAruns)
+        plotting_ICA.get_ICA_plotting(config, ICAruns),
+        DEGs.get_DESeq(config, ICAruns)

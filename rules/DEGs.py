@@ -1,10 +1,11 @@
+from snakemake.io import expand
 
 def get_permutations(k):
     for i in range(1, k):
         for j in range(i+1, k+1):
             yield i-1, j-1
 
-def get_DEG_inputs(dataset, config):
+def get_DEG_results(dataset, config):
     DEG_experiments = list()
     fpath = "results/DESeq2/{{dataset}}/{variable}/{tool}_vs_{tool2}.csv"
 
@@ -31,3 +32,17 @@ def get_DEG_inputs(dataset, config):
         DEG_experiments.append(_fpath)
 
     return DEG_experiments
+
+
+def get_DESeq(config, datasets):
+    """ """
+    all_files = list()
+
+    for dataset in datasets:
+        DEGs_exps = [
+            file.format(dataset=dataset)
+            for file in get_DEG_results(dataset, config)
+        ]
+        all_files.extend(DEGs_exps)
+
+    return all_files
