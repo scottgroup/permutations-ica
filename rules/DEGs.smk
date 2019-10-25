@@ -44,16 +44,16 @@ rule DESeq2:
         "../scripts/DEGs/3_DESeq2.R"
 
 
-# rule DESeq2_volcano_plot:
-#     """ TODO : rework this function """
-#     input:
-#         DEGs = lambda w: get_DEG_results(config, "{dataset}".format(**w))
-#     output:
-#         "something_{dataset}"
-#     params:
-#         fold_change = 1,
-#         pvalue = 0.00000001
-#     conda:
-#         "../envs/ICA_python.yaml"
-#     script:
-#         "../scripts/DEGs/4_DESeq2_volcano_plot.py"
+rule DESeq2_volcano_plot:
+    """ TODO : rework this function """
+    input:
+        DEGs = lambda w: get_DEG_results("{dataset}".format(**w), config)
+    output:
+        plot = "results/DESeq2/plots/{dataset}.png"
+    params:
+        fold_change = 4,
+        pvalue = 1e-10
+    conda:
+        "../envs/ICA_python.yaml"
+    script:
+        "../scripts/DEGs/4_DESeq2_volcano_plot.py"

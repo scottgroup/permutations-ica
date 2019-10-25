@@ -8,8 +8,8 @@
   },
   "tools":
   {
-    "annotation": ["ensembl", "ensembl92", "refseq", "ensembl97"],
     "trimmer": ["cutadapt", "trimmomatic"],
+    "annotation": ["ensembl", "ensembl92", "refseq", "ensembl97"],
     "aligner": ["HISAT2", "STAR", "tophat2"],
     "quantifier": ["cufflinks", "featureCounts", "htseq"]
   },
