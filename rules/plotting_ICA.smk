@@ -80,8 +80,24 @@ rule plotting_distribution_grid:
         proj = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/filtered_components/sigma_{sigma}/projection.tsv",
         comp_list = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/filtered_components/sigma_{sigma}/comp_list.txt"
     output:
-        "results/ICA/{ICAmethod}/{dataset}/plots/{ICA_run}/sigma_{sigma}/grid.png"
+        "results/ICA/{ICAmethod}/{dataset}/plots/{ICA_run}/sigma_{sigma}/grid.svg"
     conda:
         "../envs/ICA_python.yaml"
     script:
         "../scripts/plotting_ICA/plotting_distribution_grid.py"
+
+
+rule plotting_heatmap_components:
+    """
+    """
+    input:
+        proj = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/filtered_components/sigma_{sigma}/projection.tsv",
+        comp_list = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/filtered_components/sigma_{sigma}/comp_list.txt"
+    output:
+        plot = "results/ICA/{ICAmethod}/{dataset}/plots/{ICA_run}/sigma_{sigma}/heatmap_components.svg"
+    params:
+        k_neighbour = 50
+    conda:
+        "../envs/ICA_python.yaml"
+    script:
+        "../scripts/plotting_ICA/plotting_heatmap_components.py"
