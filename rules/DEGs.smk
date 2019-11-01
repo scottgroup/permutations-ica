@@ -51,8 +51,8 @@ rule DESeq2_volcano_plot:
     output:
         plot = "results/DESeq2/plots/{dataset}.png"
     params:
-        fold_change = 4,
-        pvalue = 1e-10
+        fold_change = 2,
+        pvalue = 1e-8
     conda:
         "../envs/ICA_python.yaml"
     script:

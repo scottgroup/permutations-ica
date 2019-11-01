@@ -13,26 +13,50 @@
     "aligner": ["HISAT2", "STAR", "tophat2"],
     "quantifier": ["cufflinks", "featureCounts", "htseq"]
   },
+  "url":
+  {
+    "pseudogenes_parents": "http://pseudogene.org/psicube/data/gencode.v10.pgene.parents.txt",
+    "pseudogenes_biotype": "http://pseudogene.org/psicube/data/gencode.v10.pseudogene.txt"
+  },
   "ICA_datasets":
   {
-    "tissues_NaN_tripleAnnot":
-    {
-        "params":
-        {
-            "counts": "data/tissues_NaN.tsv",
-            "ICAmethod": ["sklearnFastICA"],
-            "max": 35,
-            "min": 6,
-            "n": 25,
-            "sigma": [4],
-            "std": [0],
-            "threshold": 0.90
-        },
-        "variables":
-        {
-            "annotation": ["ensembl92", "ensembl", "refseq"]
-        }
-    },
+     "tissues_NaN_tripleAnnot_dualQuant":
+      {
+          "params":
+          {
+              "counts": "data/tissues_NaN.tsv",
+              "ICAmethod": ["sklearnFastICA"],
+              "max": 35,
+              "min": 6,
+              "n": 25,
+              "sigma": [4],
+              "std": [0],
+              "threshold": 0.90
+          },
+          "variables":
+          {
+              "annotation": ["ensembl92", "ensembl", "refseq"],
+              "quantifier": ["featureCounts", "htseq"]
+          }
+      },
+      "tissues_NaN_tripleAnnot":
+      {
+          "params":
+          {
+              "counts": "data/tissues_NaN.tsv",
+              "ICAmethod": ["sklearnFastICA"],
+              "max": 35,
+              "min": 6,
+              "n": 25,
+              "sigma": [4],
+              "std": [0],
+              "threshold": 0.90
+          },
+          "variables":
+          {
+              "annotation": ["ensembl92", "ensembl", "refseq"]
+          }
+      },
     "tissues_noNaN_tripleAnnot":
     {
         "params":

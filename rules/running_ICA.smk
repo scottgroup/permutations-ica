@@ -197,9 +197,9 @@ rule extracting_gene_list:
     input:
         filt_genes = rules.filter_sigma_components.output.filt_genes
     output:
-        tkn = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/gene_list/comp_sigma{sigma}/.tkn"
+        tkn = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/gene_list/comp_sigma{sigma}/.tkn"
     params:
-        directory = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/gene_list/comp_sigma{sigma}"
+        directory = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/gene_list/comp_sigma{sigma}"
     conda:
         "../envs/ICA_python.yaml"
     script:
@@ -237,7 +237,6 @@ rule bootstrapped_stability_correlation:
         components = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/components_mean.tsv",
         boot_components = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/stability/components_{boot}_strapped.tsv",
     output:
-        # "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/stability/{boot}_analysis.tsv"
         plot = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/stability/{boot}_analysis.png",
     params:
         min_correlation = 0.75
@@ -255,7 +254,6 @@ rule bootstrapped_stability_n_genes:
         components = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/components_mean.tsv",
         boot_components = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/stability/components_{boot}_strapped.tsv",
     output:
-        # "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/stability/{boot}_analysis.tsv"
         plot = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/stability/{boot}_analysis_n_genes.png",
     params:
         sigma = 4,

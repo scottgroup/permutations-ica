@@ -11,7 +11,7 @@ colors = {
 
 def reading_file(path):
     up, down = list(), list()
-    with open(fpath, 'r') as f:
+    with open(path, 'r') as f:
         for line in f.readlines():
             line = line.strip()
             if line == '>Positive genes':
