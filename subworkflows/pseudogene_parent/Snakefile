@@ -1,0 +1,16 @@
+configfile: "config.json"
+
+wildcard_constraints:
+    biotype = "({})".format("|".join(config['biotype'].keys()))
+
+
+include: "rules/downloads.smk"
+include: "rules/gtf_utils.smk"
+include: "rules/blat.smk"
+
+
+rule all:
+    input:
+        "data/fasta/processed_pseudogene.tkn",
+        "results/blat_score.tsv",
+        "data/references/genome.fa"
