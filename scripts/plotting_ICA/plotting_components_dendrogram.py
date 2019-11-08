@@ -23,4 +23,3 @@ dn = hierarchy.dendrogram(
 
 # Saving to file
 plt.savefig(snakemake.output.plot)
-plt.savefig(snakemake.output.plot2)

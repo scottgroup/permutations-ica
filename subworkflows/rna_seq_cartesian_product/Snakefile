@@ -1,0 +1,26 @@
+configfile: "config.json"
+
+import rules.get_inputs as get_inputs
+
+# Defining wildcards constraints
+wildcard_constraints:
+    annotation = "({})".format("|".join(config['tools']['annotation'])),
+    gfile = "(gtf|gff3)",
+    trimmer = "(trimmomatic|cutadapt)",
+    datasets = "({})".format("|".join(config['datasets'].keys())),
+    category = "(data_id|annotation|tissue|quantifier|aligner)",
+    comp = "[0-9]+",
+    sigma = "[0-9]+"
+
+# Adding rules download datasets and references
+include: "rules/downloads.smk"
+
+# Adding rules for the RNA-seq pipeline
+include: "rules/aligner.smk"
+include: "rules/quantifier.smk"
+include: "rules/trimmer.smk"
+include: "rules/utils.smk"
+
+rule all:
+    input:
+        "WHAT?"

@@ -4,6 +4,7 @@ import rules.running_ICA as running_ICA
 import rules.plotting_ICA as plotting_ICA
 import rules.DEGs as DEGs
 
+
 # Defining wildcards constraints
 wildcard_constraints:
     dataset = "({})".format("|".join(config["ICA_datasets"].keys())),
@@ -13,13 +14,7 @@ wildcard_constraints:
 
 
 # Adding subworkflow
-subworkflow pseudogene_parent:
-    workdir:
-        "subworkflows/pseudogene_parent"
-    snakefile:
-        "subworkflows/pseudogene_parent/Snakefile"
-    configfile:
-        "subworkflows/pseudogene_parent/config.json"
+include: "subworkflows/subworkflows.smk"
 
 
 # Including rules
@@ -29,14 +24,16 @@ include: "rules/analyse_ICA.smk"
 include: "rules/DEGs.smk"
 include: "rules/pseudogene_analysis.smk"
 
+
 # Defining model to run
 ICAruns = list(config['ICA_datasets'].keys())
 
 
-
 rule all:
     input:
-        pseudogene_parent("results/blat_score.tsv")
+        # pseudogene_parent("results/blat_score.tsv"),
+        rna_seq_cartesian_product("results/cartesian_product/tissues_NaN.tsv"),
+        # rna_seq_cartesian_product("results/rnaseq/geneCoverage/EEF1A1_plot.png"),
         # running_ICA.get_ICA_running(config, ICAruns),
         # plotting_ICA.get_ICA_plotting(config, ICAruns),
         # DEGs.get_DESeq(config, ICAruns)

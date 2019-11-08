@@ -22,11 +22,11 @@ def get_ICA_plotting(configs, datasets):
         config['ICA_run'] = ICA_run
 
         # Adding dendrogram and correlation matrix for the components
-        str = "results/ICA/{ICAmethod}/{dataset}/plots/{ICA_run}/{plot}.png"
+        str = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/{plot}.png"
         files.extend(expand(str, plot=['dendrogram', 'corr'], **config))
 
         # Adding component projections on variables
-        str = "results/ICA/{ICAmethod}/{dataset}/plots/{ICA_run}/sigma_{sigma}/projection"
+        str = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/sigma_{sigma}/projection"
         files.extend(expand(str, **config))
 
         # Adding M_stability plot
@@ -34,7 +34,7 @@ def get_ICA_plotting(configs, datasets):
         files.extend(expand(str, **config))
 
         # Adding heatmaps
-        str = "results/ICA/{ICAmethod}/{dataset}/plots/{ICA_run}/sigma_{sigma}/heatmap_components.svg"
+        str = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/sigma_{sigma}/heatmap_components.svg"
         files.extend(expand(str, **config))
 
     return files

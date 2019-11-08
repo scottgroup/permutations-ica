@@ -25,7 +25,7 @@ rule inspect_pseudogenes_parents:
         data = lambda w: config['ICA_datasets']['{dataset}'.format(**w)]['params']['counts'],
         stuff=pseudogene_parent("results/blat_score.tsv")
     output:
-        "results/ICA/{ICAmethod}/{dataset}/plots/{ICA_run}/sigma_{sigma}/pseudogene_comp{comp}.png"
+        "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/sigma_{sigma}/pseudogene_comp{comp}.png"
     params:
         gene_list = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/gene_list/comp_sigma{sigma}/comp_{comp}.txt"
     conda:

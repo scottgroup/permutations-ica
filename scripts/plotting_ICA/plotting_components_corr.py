@@ -71,4 +71,3 @@ ax.set_yticklabels(components.columns.tolist())
 
 # Saving graph to file
 plt.savefig(snakemake.output.plot)
-plt.savefig(snakemake.output.plot2)

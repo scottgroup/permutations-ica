@@ -17,7 +17,6 @@ rule plotting_components_dendrogram:
         components = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/components.tsv"
     output:
         plot = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/dendrogram.png",
-        plot2 = "results/ICA/{ICAmethod}/{dataset}/plots/{ICA_run}/dendrogram.png"
     params:
         threshold = 0.90
     conda:
@@ -36,7 +35,6 @@ rule plotting_components_corr:
         components = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/components.tsv"
     output:
         plot = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/corr.png",
-        plot2 = "results/ICA/{ICAmethod}/{dataset}/plots/{ICA_run}/corr.png"
     conda:
         "../envs/ICA_python.yaml"
     script:
@@ -50,9 +48,9 @@ rule plotting_component_projections:
     input:
         projection = rules.dataset_projection_on_filtered_components.output.projection
     output:
-        plot = directory("results/ICA/{ICAmethod}/{dataset}/plots/{ICA_run}/sigma_{sigma}/projection")
+        plot = directory("results/ICA/{ICAmethod}/{dataset}/{ICA_run}/sigma_{sigma}/projection")
     params:
-        fpath = lambda wildcards: "results/ICA/{ICAmethod}/{dataset}/plots/{ICA_run}/sigma_{sigma}/projection/comp_{{comp}}.png"
+        fpath = lambda wildcards: "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/sigma_{sigma}/projection/comp_{{comp}}.png"
     conda:
         "../envs/ICA_python.yaml"
     script:
@@ -80,7 +78,7 @@ rule plotting_distribution_grid:
         proj = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/filtered_components/sigma_{sigma}/projection.tsv",
         comp_list = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/filtered_components/sigma_{sigma}/comp_list.txt"
     output:
-        "results/ICA/{ICAmethod}/{dataset}/plots/{ICA_run}/sigma_{sigma}/grid.svg"
+        "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/sigma_{sigma}/grid.svg"
     conda:
         "../envs/ICA_python.yaml"
     script:
@@ -94,7 +92,7 @@ rule plotting_heatmap_components:
         proj = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/filtered_components/sigma_{sigma}/projection.tsv",
         comp_list = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/filtered_components/sigma_{sigma}/comp_list.txt"
     output:
-        plot = "results/ICA/{ICAmethod}/{dataset}/plots/{ICA_run}/sigma_{sigma}/heatmap_components.svg"
+        plot = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/sigma_{sigma}/heatmap_components.svg"
     params:
         k_neighbour = 50
     conda:

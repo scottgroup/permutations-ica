@@ -4,7 +4,7 @@
 Adapted from https://bitbucket.org/snakemake/snakemake/issues/28/clustering-jobs-with-snakemake
 
 Launch with :
-snakemake -j 99 --use-conda --cluster-config cluster.json --cluster 'python3 slurmSubmit.py {dependencies}'
+snakemake -j 999 --use-conda --cluster-config cluster.json --cluster 'python3 slurmSubmit.py {dependencies}'
 
 """
 import os

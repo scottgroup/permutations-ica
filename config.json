@@ -1,115 +1,115 @@
 {
-  "datasets":
-  {
-    "colon": ["ERR315348", "ERR315462", "ERR315400", "ERR315357"],
-    "heart": ["ERR315328", "ERR315331", "ERR315356", "ERR315384"],
-    "testis": ["ERR315351", "ERR315492", "ERR315352", "ERR315456"],
-    "thyroid": ["ERR315422", "ERR315397", "ERR315412", "ERR315428"]
-  },
-  "tools":
-  {
-    "trimmer": ["cutadapt", "trimmomatic"],
-    "annotation": ["ensembl", "ensembl92", "refseq", "ensembl97"],
-    "aligner": ["HISAT2", "STAR", "tophat2"],
-    "quantifier": ["cufflinks", "featureCounts", "htseq"]
-  },
-  "url":
-  {
-    "pseudogenes_parents": "http://pseudogene.org/psicube/data/gencode.v10.pgene.parents.txt",
-    "pseudogenes_biotype": "http://pseudogene.org/psicube/data/gencode.v10.pseudogene.txt"
-  },
-  "ICA_datasets":
-  {
-     "tissues_NaN_tripleAnnot_dualQuant":
-      {
-          "params":
-          {
-              "counts": "data/tissues_NaN.tsv",
-              "ICAmethod": ["sklearnFastICA"],
-              "max": 35,
-              "min": 6,
-              "n": 25,
-              "sigma": [4],
-              "std": [0],
-              "threshold": 0.90
-          },
-          "variables":
-          {
-              "annotation": ["ensembl92", "ensembl", "refseq"],
-              "quantifier": ["featureCounts", "htseq"]
-          }
-      },
-      "tissues_NaN_tripleAnnot":
-      {
-          "params":
-          {
-              "counts": "data/tissues_NaN.tsv",
-              "ICAmethod": ["sklearnFastICA"],
-              "max": 35,
-              "min": 6,
-              "n": 25,
-              "sigma": [4],
-              "std": [0],
-              "threshold": 0.90
-          },
-          "variables":
-          {
-              "annotation": ["ensembl92", "ensembl", "refseq"]
-          }
-      },
-    "tissues_noNaN_tripleAnnot":
+    "datasets":
     {
-        "params":
-        {
-            "counts": "data/tissues_noNaN.tsv",
-            "ICAmethod": ["sklearnFastICA"],
-            "max": 35,
-            "min": 6,
-            "n": 25,
-            "sigma": [4],
-            "std": [0],
-            "threshold": 0.90
-        },
-        "variables":
-        {
-            "annotation": ["ensembl92", "ensembl", "refseq"]
-        }
+        "colon": ["ERR315348", "ERR315462", "ERR315400", "ERR315357"],
+        "heart": ["ERR315328", "ERR315331", "ERR315356", "ERR315384"],
+        "testis": ["ERR315351", "ERR315492", "ERR315352", "ERR315456"],
+        "thyroid": ["ERR315422", "ERR315397", "ERR315412", "ERR315428"]
     },
-     "tissues_NaN_dualAnnot":
+    "tools":
     {
-        "params":
-        {
-            "counts": "data/tissues_NaN.tsv",
-            "ICAmethod": ["sklearnFastICA"],
-            "max": 35,
-            "min": 6,
-            "n": 25,
-            "sigma": [4],
-            "std": [0],
-            "threshold": 0.90
-        },
-        "variables":
-        {
-            "annotation": ["ensembl", "refseq"]
-        }
+        "trimmer": ["cutadapt", "trimmomatic"],
+        "annotation": ["ensembl92", "ensembl98", "refseq"],
+        "aligner": ["HISAT2", "STAR", "tophat2"],
+        "quantifier": ["cufflinks", "featureCounts", "htseq"]
     },
-    "tissues_noNaN_dualAnnot":
+    "url":
     {
-        "params":
+        "pseudogenes_parents": "http://pseudogene.org/psicube/data/gencode.v10.pgene.parents.txt",
+        "pseudogenes_biotype": "http://pseudogene.org/psicube/data/gencode.v10.pseudogene.txt"
+    },
+    "ICA_datasets":
+    {
+        "tissues_NaN_tripleAnnot_dualQuant":
         {
-            "counts": "data/tissues_noNaN.tsv",
-            "ICAmethod": ["sklearnFastICA"],
-            "max": 35,
-            "min": 6,
-            "n": 25,
-            "sigma": [4],
-            "std": [0],
-            "threshold": 0.90
+            "params":
+            {
+                "counts": "data/tissues_NaN.tsv",
+                "ICAmethod": ["sklearnFastICA"],
+                "max": 35,
+                "min": 6,
+                "n": 25,
+                "sigma": [4],
+                "std": [0],
+                "threshold": 0.90
+            },
+            "variables":
+            {
+                "annotation": ["ensembl92", "ensembl98", "refseq"],
+                "quantifier": ["featureCounts", "htseq"]
+            }
         },
-        "variables":
+        "tissues_NaN_tripleAnnot":
         {
-            "annotation": ["ensembl", "refseq"]
+            "params":
+            {
+                "counts": "data/tissues_NaN.tsv",
+                "ICAmethod": ["sklearnFastICA"],
+                "max": 35,
+                "min": 6,
+                "n": 25,
+                "sigma": [4],
+                "std": [0],
+                "threshold": 0.90
+            },
+            "variables":
+            {
+                "annotation": ["ensembl92", "ensembl98", "refseq"]
+            }
+        },
+        "tissues_noNaN_tripleAnnot":
+        {
+            "params":
+            {
+                "counts": "data/tissues_noNaN.tsv",
+                "ICAmethod": ["sklearnFastICA"],
+                "max": 35,
+                "min": 6,
+                "n": 25,
+                "sigma": [4],
+                "std": [0],
+                "threshold": 0.90
+            },
+            "variables":
+            {
+                "annotation": ["ensembl92", "ensembl98", "refseq"]
+            }
+        },
+        "tissues_NaN_dualAnnot":
+        {
+            "params":
+            {
+                "counts": "data/tissues_NaN.tsv",
+                "ICAmethod": ["sklearnFastICA"],
+                "max": 35,
+                "min": 6,
+                "n": 25,
+                "sigma": [4],
+                "std": [0],
+                "threshold": 0.90
+            },
+            "variables":
+            {
+                "annotation": ["ensembl98", "refseq"]
+            }
+        },
+        "tissues_noNaN_dualAnnot":
+        {
+            "params":
+            {
+                "counts": "data/tissues_noNaN.tsv",
+                "ICAmethod": ["sklearnFastICA"],
+                "max": 35,
+                "min": 6,
+                "n": 25,
+                "sigma": [4],
+                "std": [0],
+                "threshold": 0.90
+            },
+            "variables":
+            {
+                "annotation": ["ensembl98", "refseq"]
+            }
         }
     }
-  }
 }
