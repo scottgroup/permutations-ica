@@ -33,4 +33,8 @@ def get_ICA_plotting(configs, datasets):
         str = "results/ICA/{ICAmethod}/{dataset}/combine_{min}to{max}_n{n}_std{std}/M_stability.png"
         files.extend(expand(str, **config))
 
+        # Adding heatmaps
+        str = "results/ICA/{ICAmethod}/{dataset}/plots/{ICA_run}/sigma_{sigma}/heatmap_components.svg"
+        files.extend(expand(str, **config))
+
     return files

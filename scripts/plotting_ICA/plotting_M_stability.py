@@ -8,6 +8,70 @@ from scipy.spatial import distance_matrix
 from sklearn.cluster import AgglomerativeClustering
 
 
+def haralick_entropy(mat):
+    """
+    """
+    mat = np.abs(mat)
+
+    x, y = np.shape(mat)
+    res = 0
+    epsilon = 1e-6
+    for i in range(x):
+        for j in range(y):
+            res -= mat[i, j] * np.log(mat[i, j] + epsilon)
+
+    return res/x**3
+
+
+def haralick_homogeneity(mat):
+    mat = np.abs(mat)
+
+
+    x, y = np.shape(mat)
+    res = 0
+
+    for i in range(x):
+        for j in range(y):
+            res += mat[i, j] * (1 / (1 + (i-j)**2))
+
+    return res/x**2
+
+
+def haralick_homogeneity_blocks(mat, blocks=[]):
+    """
+    Adapted the idea from :
+    https://math.stackexchange.com/questions/1392491/measure-of-how-much-diagonal-a-matrix-is
+
+    """
+    mat = np.abs(mat)
+
+
+    # Setting var
+    d = np.shape(mat)[0]
+    j = np.ones(d)
+    r = np.arange(1, d+1, 1)
+
+    xmat = np.outer(r, j.T)
+    # If using the block scheme
+    if len(blocks) > 1:
+        for i in range(int(np.max(blocks)+1)):
+            args = np.argwhere(blocks==i)
+            for x,y in permutations(args, 2):
+                xmat[x, y] = (xmat[x, x] + xmat[y, y])/2
+    ymat = xmat.T
+
+    x, y = np.shape(mat)
+    res = 0
+
+    for i in range(x):
+        for j in range(y):
+            i_corr = xmat[i, j]
+            j_corr = ymat[i, j]
+            res += mat[i, j] * (1 / (1 + (i_corr-j_corr)**2))
+
+    return res/x**2
+
+
 def finding_blocks(mat, threshold=0.9):
     """
     """
@@ -120,15 +184,31 @@ def getting_components(path):
 
 # Plotting
 IDs = list()
-pearsons = list()
+# pearsons = list()
+metrics = list()
 
 for file in snakemake.input:
     mat = getting_components(file)
     blocks = finding_blocks(mat)
-    pearson = pearson_correlation(np.abs(mat), blocks)
+    # pearson = pearson_correlation(np.abs(mat), blocks)
+    metric = haralick_homogeneity(mat)
     M_id = 'M' + file.split('/M')[-1].split('_')[0]
     IDs.append(M_id)
-    pearsons.append(pearson)
+    metrics.append(metric)
+    # pearsons.append(pearson)
 
-plt.plot(IDs, pearsons)
-plt.savefig(snakemake.output.plot)
+    print('This is metric ', metric)
+    # print('This is pearson ', pearson)
+
+print('metrics')
+print(metrics)
+
+# print('pearsons')
+# print(pearsons)
+
+# plt.plot(IDs, pearsons)
+# plt.show()
+
+plt.plot(IDs, metrics)
+plt.show()
+# plt.savefig(snakemake.output.plot)

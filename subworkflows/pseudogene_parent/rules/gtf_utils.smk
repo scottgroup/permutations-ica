@@ -46,8 +46,6 @@ checkpoint splitting_queryfasta:
         tkn = "data/fasta/processed_pseudogene.tkn"
     conda:
         "../envs/pyfasta.yaml"
-    params:
-        file = "%(fasta)s/%(seqid)s.fa"
     shell:
         "pyfasta split -n 200 {input.fasta} && "
         "touch {output.tkn}"

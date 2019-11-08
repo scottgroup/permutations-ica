@@ -11,15 +11,6 @@ wildcard_constraints:
     std="[0-9]+",
     sigma="[0-9]+"
 
-# Including rules
-include: "rules/running_ICA.smk"
-include: "rules/plotting_ICA.smk"
-include: "rules/analyse_ICA.smk"
-include: "rules/DEGs.smk"
-include: "rules/pseudogene_analysis.smk"
-
-# Defining model to run
-ICAruns = list(config['ICA_datasets'].keys())
 
 # Adding subworkflow
 subworkflow pseudogene_parent:
@@ -31,9 +22,21 @@ subworkflow pseudogene_parent:
         "subworkflows/pseudogene_parent/config.json"
 
 
+# Including rules
+include: "rules/running_ICA.smk"
+include: "rules/plotting_ICA.smk"
+include: "rules/analyse_ICA.smk"
+include: "rules/DEGs.smk"
+include: "rules/pseudogene_analysis.smk"
+
+# Defining model to run
+ICAruns = list(config['ICA_datasets'].keys())
+
+
+
 rule all:
     input:
-        # pseudogene_parent("results/blat_score.tsv")
-        running_ICA.get_ICA_running(config, ICAruns),
-        plotting_ICA.get_ICA_plotting(config, ICAruns),
+        pseudogene_parent("results/blat_score.tsv")
+        # running_ICA.get_ICA_running(config, ICAruns),
+        # plotting_ICA.get_ICA_plotting(config, ICAruns),
         # DEGs.get_DESeq(config, ICAruns)
