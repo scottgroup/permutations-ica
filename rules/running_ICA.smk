@@ -7,35 +7,10 @@ def get_components_range(wildcards):
     )
 
 
-rule running_consICA:
-    """
-        Running an ICA model on the data
-
-        ICAmethod -> Specifies which model is being used. All methods are
-            hosted in the scripts/running_ICA/ICAmethods folder and they all
-            share the same Dataset object and preprocessing.
-        dataset -> Specifies the subset of data chosen. All datasets must be
-            defined in config.json under ICA_datasets as a dictionary where
-            each key is a variable, and each value a list of possible variable
-            states.
-        M -> Number of components to generate.
-        n -> Number of iteration. Each iteration only differs by the
-            optimisation starting point.
-    """
-    input:
-        counts = lambda w: config['ICA_datasets']['{dataset}'.format(**w)]['params']['counts'],
-    output:
-        raw_components = temp("results/ICA/consICA/{dataset}/M{M}_n{n}_std{std}/raw_components.tsv"),
-        fit_min = "results/ICA/consICA/{dataset}/M{M}_n{n}_std{std}/fit_min.txt",
-    params:
-        max_it = 50000,
-        tolerance = 1e-20
-    threads:
-        32
-    conda:
-        "../envs/consICA.yaml"
-    script:
-        "../scripts/running_ICA/1_running_consICA.py"
+def get_counts(wildcards):
+    """ """
+    fname = config['ICA_datasets'][wildcards.dataset]['params']['counts']
+    return rna_seq_cartesian_product("results/cartesian_product/{dataset}.tsv".format(dataset=fname)) 
 
 
 rule running_sklearnFastICA:
@@ -54,7 +29,7 @@ rule running_sklearnFastICA:
             optimisation starting point.
     """
     input:
-        counts = lambda w: config['ICA_datasets']['{dataset}'.format(**w)]['params']['counts'],
+        counts = get_counts,
     output:
         components = temp("results/ICA/sklearnFastICA/{dataset}/M{M}_n{n}_std{std}/raw_components.tsv"),
         fit_min = "results/ICA/sklearnFastICA/{dataset}/M{M}_n{n}_std{std}/fit_min.txt",
@@ -145,7 +120,7 @@ rule dataset_projection_on_filtered_components:
 
     """
     input:
-        counts = lambda w: config['ICA_datasets']['{dataset}'.format(**w)]['params']['counts'],
+        counts = get_counts,
         components = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/filtered_components/sigma_{sigma}/components.tsv",
     output:
         projection = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/filtered_components/sigma_{sigma}/projection.tsv",
@@ -157,7 +132,7 @@ rule dataset_projection_on_filtered_components:
 
 rule dataset_variable_boolean:
     input:
-        counts = lambda w: config['ICA_datasets']['{dataset}'.format(**w)]['params']['counts'],
+        counts = get_counts,
     output:
         var_bool = "results/ICA/variable_boolean/{dataset}.tsv",
     conda:
@@ -214,7 +189,7 @@ rule running_sklearnFastICA_bootstraped:
         {boot}% of original data.
     """
     input:
-        counts = lambda w: config['ICA_datasets']['{dataset}'.format(**w)]['params']['counts'],
+        counts = get_counts,
     output:
         components = "results/ICA/sklearnFastICA/{dataset}/M{M}_n{n}_std{std}/stability/components_{boot}_strapped.tsv",
         fit_min = "results/ICA/sklearnFastICA/{dataset}/M{M}_n{n}_std{std}/stability/fit_min_{boot}_strapped.txt",

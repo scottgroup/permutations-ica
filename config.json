@@ -24,7 +24,7 @@
         {
             "params":
             {
-                "counts": "data/tissues_NaN.tsv",
+                "counts": "tissues_NaN",
                 "ICAmethod": ["sklearnFastICA"],
                 "max": 35,
                 "min": 6,
@@ -43,7 +43,7 @@
         {
             "params":
             {
-                "counts": "data/tissues_NaN.tsv",
+                "counts": "tissues_NaN",
                 "ICAmethod": ["sklearnFastICA"],
                 "max": 35,
                 "min": 6,
@@ -61,7 +61,7 @@
         {
             "params":
             {
-                "counts": "data/tissues_noNaN.tsv",
+                "counts": "tissues_noNaN",
                 "ICAmethod": ["sklearnFastICA"],
                 "max": 35,
                 "min": 6,
@@ -79,7 +79,7 @@
         {
             "params":
             {
-                "counts": "data/tissues_NaN.tsv",
+                "counts": "tissues_NaN",
                 "ICAmethod": ["sklearnFastICA"],
                 "max": 35,
                 "min": 6,
@@ -97,7 +97,7 @@
         {
             "params":
             {
-                "counts": "data/tissues_noNaN.tsv",
+                "counts": "tissues_noNaN",
                 "ICAmethod": ["sklearnFastICA"],
                 "max": 35,
                 "min": 6,
