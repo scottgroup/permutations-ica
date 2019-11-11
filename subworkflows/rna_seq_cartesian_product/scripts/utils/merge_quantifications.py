@@ -83,6 +83,11 @@ hgnc_df.columns = pd.MultiIndex.from_tuples(
     hgnc_df.columns,
     names=['quantifier', 'tissue', 'data_id', 'trimmer', 'aligner', 'annotation']
 )
+
+if snakemake.wildcards.isNaN == 'noNaN':
+    hgnc_df.fillna(0, axis=1, inplace=True)
+else:
+    hgnc_df.dropna(axis=0, inplace=True)
+
 hgnc_df.to_csv(snakemake.output.out_file, sep='\t')
 
-hgnc_df.dropna(axis=0, inplace=True)

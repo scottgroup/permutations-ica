@@ -15,8 +15,8 @@
         },
         "refseq":
         {
-            "gtf": "ftp://ftp.ncbi.nlm.nih.gov/genomes/Homo_sapiens/GRCh38_interim_annotation/interim_GRCh38.p12_top_level_2019-01-25.gtf.gz",
-            "gff3": "ftp://ftp.ncbi.nlm.nih.gov/genomes/Homo_sapiens/GRCh38_interim_annotation/interim_GRCh38.p12_top_level_2019-01-25.gff3.gz"
+            "gtf": "ftp://ftp.ncbi.nlm.nih.gov/genomes/Homo_sapiens/ARCHIVE/ANNOTATION_RELEASE.109/GRCh38_interim_annotation/interim_GRCh38.p12_top_level_2019-01-25.gtf.gz",
+            "gff3": "ftp://ftp.ncbi.nlm.nih.gov/genomes/Homo_sapiens/ARCHIVE/ANNOTATION_RELEASE.109/GRCh38_interim_annotation/interim_GRCh38.p12_top_level_2019-01-25.gff3.gz"
         }
     },
     "path":

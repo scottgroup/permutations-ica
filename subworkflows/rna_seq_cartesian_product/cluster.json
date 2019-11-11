@@ -94,8 +94,8 @@
     },
     "htseq":
     {
-    	"time": "0-5:30:00",
-    	"mem": "60G",
-    	"cpus-per-task": "16"
+    	"time": "0-8:30:00",
+    	"mem": "8000M",
+    	"cpus-per-task": "2"
     }
 }
