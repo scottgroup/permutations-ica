@@ -1,9 +1,15 @@
 from DEGs import get_DEG_results
 
 
+def get_counts(wildcards):
+    """ """
+    fname = config['ICA_datasets'][wildcards.dataset]['params']['counts']
+    return rna_seq_cartesian_product("results/cartesian_product/{dataset}.tsv".format(dataset=fname))
+
+
 rule prepare_data_for_DESeq2:
     input:
-        dataset = lambda w: config['ICA_datasets']['{dataset}'.format(**w)]['params']['counts'],
+        dataset = get_counts,
     output:
         counts = "results/DESeq2/{dataset}/counts.tsv",
         samples = "results/DESeq2/{dataset}/samples.tsv"
@@ -24,7 +30,7 @@ rule init_DESeq2:
     conda:
         "../envs/DESeq2.yaml"
     threads:
-        32
+        40
     script:
         "../scripts/DEGs/2_init_DESeq2.R"
 
@@ -39,7 +45,7 @@ rule DESeq2:
     log:
         "logs/DESeq2/DESeq2_{dataset}/{variable}_{tool}_{tool2}.log"
     threads:
-        32
+        40
     script:
         "../scripts/DEGs/3_DESeq2.R"
 
