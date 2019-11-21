@@ -31,6 +31,10 @@ def zca_whitening_matrix(X):
         Rows: Variables
         Columns: Observations
     OUTPUT: ZCAMatrix: [M x M] matrix -> Not true anymore
+    
+    Code from :
+    https://stackoverflow.com/questions/31528800/how-to-implement-zca-whitening-python
+
     """
     # Covariance matrix [column-wise variables]: Sigma = (X-mu)' * (X-mu) / N
     sigma = np.cov(X, rowvar=True)  # [M x M]
