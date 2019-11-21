@@ -37,7 +37,7 @@ rule running_sklearnFastICA:
         max_it = 50000,
         tolerance = 1e-20
     threads:
-        32
+        40
     conda:
         "../envs/ICA_python.yaml"
     script:

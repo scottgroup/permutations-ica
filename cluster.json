@@ -3,8 +3,8 @@
     {
         "job-name": "SM.{rule}",
         "nodes": "1",
-        "cpus-per-task": "32",
-        "mem": "125G",
+        "cpus-per-task": "40",
+        "mem": "92G",
         "time": "0-1:00:00",
         "mail-user": "joel.simoneau@usherbrooke.ca",
         "mail-type": "FAIL"
@@ -20,103 +20,103 @@
     "flipping_ICA_components":
     {
         "cpus-per-task": "1",
-        "mem": "4000M",
+        "mem": "4570M",
         "time": "0-00:30:00"
     },
     "merging_n_components":
     {
         "cpus-per-task": "1",
-        "mem": "4000M",
+        "mem": "4570M",
         "time": "0-00:30:00"
     },
     "filter_sigma_components":
     {
         "cpus-per-task": "1",
-        "mem": "4000M",
+        "mem": "4570M",
         "time": "0-00:30:00"
     },
     "component_agnostic_model":
     {
         "cpus-per-task": "1",
-        "mem": "4000M",
+        "mem": "4570M",
         "time": "0-00:30:00"
     },
     "dataset_projection_on_filtered_components":
     {
         "cpus-per-task": "1",
-        "mem": "4000M",
+        "mem": "4570M",
         "time": "0-00:30:00"
     },
     "extracting_gene_list":
     {
         "cpus-per-task": "1",
-        "mem": "4000M",
+        "mem": "4570M",
         "time": "0-00:30:00"
     },
     "dataset_variable_boolean":
     {
         "cpus-per-task": "1",
-        "mem": "4000M",
+        "mem": "4570M",
         "time": "0-00:30:00"
     },
     "projection_boolean_correlation":
     {
         "cpus-per-task": "1",
-        "mem": "4000M",
+        "mem": "4570M",
         "time": "0-00:30:00"
     },
     "list_distribution_component":
     {
         "cpus-per-task": "1",
-        "mem": "4000M",
+        "mem": "4570M",
         "time": "0-00:30:00"
     },
     "bootstrapped_stability_correlation":
     {
         "cpus-per-task": "1",
-        "mem": "4000M",
+        "mem": "4570M",
         "time": "0-00:30:00"
     },
     "bootstrapped_stability_n_genes":
     {
         "cpus-per-task": "1",
-        "mem": "4000M",
+        "mem": "4570M",
         "time": "0-00:30:00"
     },
     "plotting_components_dendrogram":
     {
         "cpus-per-task": "1",
-        "mem": "4000M"
+        "mem": "4570M"
     },
     "plotting_components_corr":
     {
         "cpus-per-task": "1",
-        "mem": "4000M"
+        "mem": "4570M"
     },
     "plotting_component_projections":
     {
         "cpus-per-task": "1",
-        "mem": "4000M"
+        "mem": "4570M"
     },
     "plotting_M_stability":
     {
         "cpus-per-task": "1",
-        "mem": "4000M"
+        "mem": "4570M"
     },
-    "plotting_heatmap_components:":
+    "plotting_heatmap_components":
     {
         "cpus-per-task": "1",
-        "mem": "4000M"
+        "mem": "4570M"
     },
     "GO_analysis":
     {
         "cpus-per-task": "1",
-        "mem": "4000M"
+        "mem": "4570M"
     },
     "prepare_data_for_DESeq2":
     {
         "cpus-per-task": "1",
-        "mem": "4000M"
+        "mem": "4570M"
     },
     "init_DESeq2":
     {
@@ -128,7 +128,7 @@
     },
     "analyze_DESeq2":
     {
-        "cpus-per-task": "1",
-        "mem": "4000M"
+        "cpus-per-task": "2",
+        "mem": "4570M"
     }
 }

@@ -86,18 +86,5 @@ class Dataset():
         DESeq2 = importr('DESeq2')
         matInt = np.array(self.data).astype(int).T
 
-        # hit = np.array(DESeq2.varianceStabilizingTransformation(numpy2r(matInt)))
-        hit = np.array(DESeq2.rlog(numpy2r(matInt), fitType='local'))
+        hit = np.array(DESeq2.varianceStabilizingTransformation(numpy2r(matInt), fitType='local'))
         self.data = pd.DataFrame(hit.T, columns=self.data.columns, index=self.data.index)
-
-
-        # dds = DESeq2.makeExampleDESeqDataSet(m=6)
-
-        # print(dds)
-
-        # print(qwe)
-
-        # pseudo_count = 13
-        # self.data[c] = np.log10(self.data[c] + pseudo_count)
-        # self.data = np.log10(self.data + pseudo_count)
-        # self.data = 2*np.sqrt(self.data + 3.0/8.0)
