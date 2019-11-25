@@ -57,18 +57,33 @@ rule plotting_component_projections:
         "../scripts/plotting_ICA/plotting_component_projections.py"
 
 
+rule plotting_M_stability_data:
+    """
+        Getting data for M_stability
+    """
+    input:
+        get_components
+    output:
+        data = "results/ICA/{ICAmethod}/{dataset}/combine_{min}to{max}_n{n}_std{std}/M_stability.tsv"
+    conda:
+        "../envs/ICA_python.yaml"
+    script:
+        "../scripts/plotting_ICA/plotting_M_stability_data.py"
+
+
 rule plotting_M_stability:
     """
         Plotting block_pearson score for every M
     """
     input:
-        get_components
+        data = rules.plotting_M_stability_data.output.data
     output:
-        plot = "results/ICA/{ICAmethod}/{dataset}/combine_{min}to{max}_n{n}_std{std}/M_stability.png"
+        plot = "results/ICA/{ICAmethod}/{dataset}/combine_{min}to{max}_n{n}_std{std}/M_stability.svg"
     conda:
         "../envs/ICA_python.yaml"
     script:
         "../scripts/plotting_ICA/plotting_M_stability.py"
+
 
 
 rule plotting_distribution_grid:

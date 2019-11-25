@@ -98,6 +98,11 @@
         "cpus-per-task": "1",
         "mem": "4570M"
     },
+    "plotting_M_stability_data":
+    {
+        "cpus-per-task": "1",
+        "mem": "4570M"
+    },
     "plotting_M_stability":
     {
         "cpus-per-task": "1",
