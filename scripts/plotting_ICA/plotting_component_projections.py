@@ -24,16 +24,21 @@ projection = pd.read_csv(
 for comp in projection.columns.tolist():
     fig, axes = plt.subplots(len(categories), figsize=(16, 12))
 
+    # Creating Y jitter position
+    y = np.random.rand(len(projection))
+
     for category, idx in zip(categories, range(len(categories))):
         data_dict = projection[comp].groupby(category).apply(list).to_dict()
 
         for key, val in data_dict.items():
+            filt = projection[comp].index.get_level_values(category) == key
+            slice = np.arange(len(filt))
 
             axes[idx].scatter(
-                val, np.random.rand(len(val)),
+                val, y[slice[filt]],
                 label=key,
                 alpha=0.4,
-                s=100
+                s=75
             )
             axes[idx].legend(
                 bbox_to_anchor=(0., 1.02, 1., .102), loc='lower left',

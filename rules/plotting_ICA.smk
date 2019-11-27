@@ -50,7 +50,7 @@ rule plotting_component_projections:
     output:
         plot = directory("results/ICA/{ICAmethod}/{dataset}/{ICA_run}/sigma_{sigma}/projection")
     params:
-        fpath = lambda wildcards: "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/sigma_{sigma}/projection/comp_{{comp}}.png"
+        fpath = lambda wildcards: "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/sigma_{sigma}/projection/comp_{{comp}}.svg"
     conda:
         "../envs/ICA_python.yaml"
     script:
