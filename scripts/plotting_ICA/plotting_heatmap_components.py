@@ -58,7 +58,7 @@ for i, var in enumerate(vars):
         score_df[score_df.index.isin(tool_dict[var])],
         linewidths=0.5,
         annot=True, ax=axes[i],
-        cmap="YlGnBu", vmax=1
+        cmap="YlGnBu", vmax=1, vmin=0.30
     )
     axes[i].set_yticklabels(labels=axes[i].get_yticklabels(), rotation=0)
 
