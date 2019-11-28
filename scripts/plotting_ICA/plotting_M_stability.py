@@ -14,10 +14,13 @@ data = pd.read_csv(
 
 # Half IDs
 IDs = [id[1:] if idx%2 == 0 else '' for idx, id in enumerate(data['IDs'].tolist())]
-print(IDs)
+
+# Params
+max = int(snakemake.wildcards.max)
+min = int(snakemake.wildcards.min)
 
 plt.plot(data['IDs'], data['metric'], 'k', linewidth=2)
-plt.xlim(6, 29)
+plt.xlim(min, max-min)
 locs, labels = plt.xticks()
 plt.xticks(locs, IDs)
 
