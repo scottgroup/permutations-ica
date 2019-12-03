@@ -37,12 +37,12 @@ rule GO_analysis:
         "../scripts/analyse_ICA/GO_analysis.py"
 
 
-rule MetaGene:
+rule plotMetaGene:
     input:
-        beds = getGeneBEDs
+        genes = getGeneBEDs
     output:
         plot = "results/{ICA_path}/comp_{comp}_{side}_sigma{sigma}.svg"
     conda:
         "../envs/ICA_python.yaml"
     script:
-        "../scripts/analyse_ICA/MetaGene.py"
+        "../scripts/analyse_ICA/plotMetaGene.py"
