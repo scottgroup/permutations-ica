@@ -20,6 +20,25 @@
     },
     "ICA_datasets":
     {
+        "tissues_NaN_tripleAnnot_cufflinks":
+        {
+            "params":
+            {
+                "counts": "tissues_NaN",
+                "ICAmethod": ["sklearnFastICA"],
+                "max": 35,
+                "min": 6,
+                "n": 25,
+                "sigma": [4],
+                "std": [0],
+                "threshold": 0.90
+            },
+            "variables":
+            {
+                "annotation": ["ensembl92", "ensembl98", "refseq"],
+                "quantifier": ["cufflinks"]
+            }
+        },
         "tissues_NaN_tripleAnnot_dualQuant":
         {
             "params":

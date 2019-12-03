@@ -27,7 +27,6 @@ def get_bam_variables(fname):
     return bam_var
 
 # Importing data
-params = eval(snakemake.params.__str__())
 bams = snakemake.input.bams
 df_gene, start, stop, strand, chr = get_gene(
     snakemake.input.gtf, snakemake.wildcards.gene

@@ -56,8 +56,8 @@
     "dataset_variable_boolean":
     {
         "cpus-per-task": "1",
-        "mem": "4570M",
-        "time": "0-00:30:00"
+        "mem": "9140M",
+        "time": "0-02:30:00"
     },
     "projection_boolean_correlation":
     {
