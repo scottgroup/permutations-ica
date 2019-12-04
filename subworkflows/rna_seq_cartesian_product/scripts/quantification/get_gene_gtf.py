@@ -34,3 +34,22 @@ def get_gene(gtf_file, gene):
         raise AssertionError
 
     return df_gene, gene_start, gene_end, gene_strand, gene_seq
+
+
+def get_bam_variables(fname):
+    """ """
+    bam_var = dict()
+
+    for tool, vars in snakemake.config['tools'].items():
+        for var in vars:
+            if var in fname.split('/'):
+                bam_var[tool] = var
+
+    for tissue, datasets in snakemake.config['datasets'].items():
+        if tissue in fname:
+            bam_var['tissue'] = tissue
+            for dataset in datasets:
+                if dataset in fname:
+                    bam_var['dataset'] = dataset
+
+    return bam_var

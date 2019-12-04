@@ -150,22 +150,11 @@ rule getGeneCoverage:
         datasets_depth = rules.get_datasets_depth.output.datasets_depth,
         gtf = "data/references/ensembl98.gtf"
     output:
-        gene_coverage = "results/rnaseq/geneCoverage/{gene}.tsv"
+        gene_coverage = "results/rnaseq/geneCoverage/{gene}.tsv",
+        gene_BAM_tkn = "results/geneCoverage/{gene}.tkn"
     conda:
         "../envs/python.yaml"
     threads:
         1
     script:
         "../scripts/quantification/getGeneCoverage.py"
-
-
-rule plotMetaGene:
-    input:
-        gene_coverage = "results/rnaseq/geneCoverage/{gene}.tsv",
-        gtf = "data/references/ensembl98.gtf"
-    output:
-        plot = "results/rnaseq/geneCoverage/{gene}_plot.png"
-    conda:
-        "../envs/python.yaml"
-    script:
-        "../scripts/quantification/plotMetaGene.py"

@@ -1,6 +1,8 @@
+from functools import partial
 
-def getGeneBEDs(wildcards):
 
+def getGeneFiles(path, wildcards):
+    """ """
     gene_list = "results/{ICA_path}/gene_list/comp_sigma{sigma}/comp_{comp}.txt"
     genes = list()
     with open(gene_list.format(**wildcards), 'r') as f:
@@ -14,13 +16,10 @@ def getGeneBEDs(wildcards):
             elif wildcards.side == 'down' and not up:
                 genes.append(line.strip())
 
-    BEDs = list()
-    path = "results/rnaseq/geneCoverage/{gene}.tsv"
-
+    files = list()
     for gene in genes:
-        BEDs.append(rna_seq_cartesian_product(path.format(gene=gene)))
-
-    return BEDs
+        files.append(rna_seq_cartesian_product(path.format(gene=gene)))
+    return files
 
 
 rule GO_analysis:
@@ -37,12 +36,33 @@ rule GO_analysis:
         "../scripts/analyse_ICA/GO_analysis.py"
 
 
+rule getMetaGene:
+    input:
+        genes = partial(getGeneFiles, "results/rnaseq/geneCoverage/{gene}.tsv"),
+        gtf = rna_seq_cartesian_product("data/references/ensembl98.gtf")
+    output:
+        mean = "results/{ICA_path}/metaGene/comp_{comp}_{side}_sigma{sigma}_mean.tsv",
+        std = "results/{ICA_path}/metaGene/comp_{comp}_{side}_sigma{sigma}_std.tsv"
+    conda:
+        "../envs/ICA_python.yaml"
+    script:
+        "../scripts/analyse_ICA/getMetaGene.py"
+
+
 rule plotMetaGene:
     input:
-        genes = getGeneBEDs
+        mean = rules.getMetaGene.output.mean,
+        std = rules.getMetaGene.output.std
     output:
-        plot = "results/{ICA_path}/comp_{comp}_{side}_sigma{sigma}.svg"
+        plot = "results/{ICA_path}/metaGene/comp_{comp}_{side}_sigma{sigma}.svg"
     conda:
         "../envs/ICA_python.yaml"
     script:
         "../scripts/analyse_ICA/plotMetaGene.py"
+
+
+rule getOtherChr:
+    input:
+        gene_BAM_tkn = partial(getGeneFiles, "results/geneCoverage/{gene}.tkn"),
+    output:
+        file = "results/{ICA_path}/metaGene/comp_{comp}_{side}_sigma{sigma}_chr"

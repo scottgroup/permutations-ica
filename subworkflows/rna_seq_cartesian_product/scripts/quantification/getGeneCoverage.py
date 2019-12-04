@@ -2,29 +2,13 @@ import os
 
 import numpy as np
 import pandas as pd
+from pathlib import Path
 import pysam
 import pybedtools
 
 from get_gene_gtf import get_gene
+from get_gene_gtf import get_bam_variables
 
-
-def get_bam_variables(fname):
-    """ """
-    bam_var = dict()
-
-    for tool, vars in snakemake.config['tools'].items():
-        for var in vars:
-            if var in fname.split('/'):
-                bam_var[tool] = var
-
-    for tissue, datasets in snakemake.config['datasets'].items():
-        if tissue in fname:
-            bam_var['tissue'] = tissue
-            for dataset in datasets:
-                if dataset in fname:
-                    bam_var['dataset'] = dataset
-
-    return bam_var
 
 # Importing data
 bams = snakemake.input.bams
@@ -50,8 +34,8 @@ for i, bam in enumerate(bams):
     # Load BAM file
     samfile = pysam.AlignmentFile(bam, "rb")
 
-    # Creating temporary bam file
-    basename = str(start) + '_' + str(stop) + '_' + strand + '.bam'
+    # Creating gene BAM file
+    basename = snakemake.wildcards.gene + '.bam'
     temp_fname = os.path.join(os.path.dirname(bam), basename)
     with pysam.Samfile(temp_fname, 'wb', template=samfile) as fout:
         for read in samfile.fetch(str(chr), start, stop):
@@ -75,8 +59,8 @@ for i, bam in enumerate(bams):
     # Add scaling factor for dataset depth
     bed_mat[:, i] *= float(datasets_depth[bam_var['dataset']])
 
-    # Removing temp file
-    os.remove(temp_fname)
+# Touching the gene token file
+Path(snakemake.output.gene_BAM_tkn).touch()
 
 # Create output dataframe
 df_header = pd.DataFrame(header)
