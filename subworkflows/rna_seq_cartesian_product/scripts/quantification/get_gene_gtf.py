@@ -36,16 +36,16 @@ def get_gene(gtf_file, gene):
     return df_gene, gene_start, gene_end, gene_strand, gene_seq
 
 
-def get_bam_variables(fname):
+def get_bam_variables(fname, config):
     """ """
     bam_var = dict()
 
-    for tool, vars in snakemake.config['tools'].items():
+    for tool, vars in config['tools'].items():
         for var in vars:
             if var in fname.split('/'):
                 bam_var[tool] = var
 
-    for tissue, datasets in snakemake.config['datasets'].items():
+    for tissue, datasets in config['datasets'].items():
         if tissue in fname:
             bam_var['tissue'] = tissue
             for dataset in datasets:
