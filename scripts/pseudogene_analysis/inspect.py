@@ -2,7 +2,22 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from scipy import stats
 
-# Using data from http://pseudogene.org/psicube/index.html
+plt.rcParams['svg.fonttype'] = 'none'
+plt.rcParams['font.size'] = 6
+plt.rcParams['font.family'] = 'sans-serif'
+plt.rcParams['font.sans-serif'] = ['Arial']
+
+
+def mm2inch(*tupl):
+    """
+    https://stackoverflow.com/questions/14708695/specify-figure-size-in-centimeter-in-matplotlib
+    """
+    inch = 25.4
+    if isinstance(tupl[0], tuple):
+        return tuple(i/inch for i in tupl[0])
+    else:
+        return tuple(i/inch for i in tupl)
+
 
 def reading_file(path):
     up, down = list(), list()
@@ -21,6 +36,8 @@ def reading_file(path):
     return up, down
 
 # Reading files
+# Using data from http://pseudogene.org/psicube/index.html
+df_gene_biotype = pd.read_csv(snakemake.input.gene_biotype, sep='\t')
 df_parent = pd.read_csv(snakemake.input.parent, sep='\t')
 df_biotype = pd.read_csv(
     snakemake.input.biotype, sep='\t',
@@ -32,9 +49,10 @@ df_biotype = pd.read_csv(
 
 # Reading data genes
 data = pd.read_csv(
-    snakemake.input.data,
-    sep='\t', usecols=[0,1,2,3], skiprows=6
+    snakemake.input.data, sep='\t',
+    index_col=[0, 1, 2, 3], header=[0, 1, 2, 3, 4, 5],
 )
+data.dropna(axis=0, inplace=True)
 
 # Reading gene list
 up, down = reading_file(snakemake.params.gene_list)
@@ -58,50 +76,39 @@ df_parent = df_parent[df_parent['ID'].isin(df_biotype['transcript_id'].to_list()
 # Couting pseudogenes per gene
 pseudo_count = df_parent.groupby('Parent gene').count()['ID'].sort_values()
 pseudo_count.index = pseudo_count.index.str.split('.').str[0]
+pseudo_dict = pseudo_count.to_dict()
+
+# List of genes present in dataset and not already pseudogenes
+genes = df_gene_biotype[
+    ~df_gene_biotype['gene_biotype'].str.contains('pseudo')
+]['gene_id'].tolist()
 
 # Keeping only genes present in the dataset
-ens_genes = data['ensembl_id'].to_list()
-pseudo_count = pseudo_count[pseudo_count.index.isin(ens_genes)]
+ens_genes = [
+    gene for gene in data.index.get_level_values('ensembl_id').to_list()
+    if gene in genes
+]
+pseudo_count = pd.DataFrame(index=ens_genes)
+pseudo_count['pseudogene'] = pseudo_count.index.map(pseudo_dict)
+pseudo_count.fillna(0, inplace=True)
 
-print(pseudo_count)
-
-
-# Loading other
-pseudo_blat = pd.read_csv(snakemake.input.stuff, sep='\t')
-blat_count = pseudo_blat.groupby('subjectGene').count()['query'].sort_values()
-blat_count = blat_count[blat_count.index.isin(ens_genes)]
-
-print(blat_count)
-print(pseudo_count[pseudo_count.index.isin(up)])
-print(blat_count[blat_count.index.isin(up)])
-
-print('There is ', len(up), ' up genes')
-
-# stuff = (blat_count - pseudo_count)
-# print(stuff.sort_values())
-
-# Plotting?
+# Plotting
+plt.figure(figsize=mm2inch((40,65)))
 plt.boxplot(
     [
-        pseudo_count[~pseudo_count.index.isin(up)],
-        pseudo_count[pseudo_count.index.isin(up)],
-        blat_count[~blat_count.index.isin(up)],
-        blat_count[blat_count.index.isin(up)],    ],
+        pseudo_count[pseudo_count.index.isin(up)]['pseudogene'],
+        pseudo_count[~pseudo_count.index.isin(up)]['pseudogene']
+    ],
     widths=.8
 )
+plt.ylim([0,159])
 plt.ylabel('Number of processed pseudogene')
-plt.show()
+plt.tight_layout()
+plt.savefig(snakemake.output.plot)
 
-qwe = stats.ttest_ind(
-    pseudo_count[~pseudo_count.index.isin(up)],
+stat = stats.ttest_ind(
     pseudo_count[pseudo_count.index.isin(up)],
+    pseudo_count[~pseudo_count.index.isin(up)],
     equal_var=False
 )
-print(qwe)
-
-qwe = stats.ttest_ind(
-    blat_count[~blat_count.index.isin(up)],
-    blat_count[blat_count.index.isin(up)],
-    equal_var=False
-)
-print(qwe)
+print(stat)
