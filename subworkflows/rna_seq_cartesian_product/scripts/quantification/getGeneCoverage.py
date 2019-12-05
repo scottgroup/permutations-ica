@@ -28,7 +28,7 @@ header = list()
 
 for i, bam in enumerate(bams):
     # Get variables
-    bam_var = get_bam_variables(bam)
+    bam_var = get_bam_variables(bam, snakemake.config)
     header.append(bam_var)
 
     # Load BAM file
