@@ -1,16 +1,11 @@
+from running_ICA import get_components_range
 
-
-def get_components_range(wildcards):
-    return expand(
-        "results/ICA/{{ICAmethod}}/{{dataset}}/M{M}_n{{n}}_std{{std}}/components_mean.tsv",
-        M=range(int(wildcards.min), int(wildcards.max)+1)
-    )
-
+ICAmodel_path = config["path"]["ICAmodel"]
 
 def get_counts(wildcards):
-    """ """
+    """ Returns path of the count file """
     fname = config['ICA_datasets'][wildcards.dataset]['params']['counts']
-    return rna_seq_cartesian_product("results/cartesian_product/{dataset}.tsv".format(dataset=fname)) 
+    return rna_seq_cartesian_product("results/cartesian_product/{dataset}.tsv".format(dataset=fname))
 
 
 rule running_sklearnFastICA:
@@ -27,15 +22,18 @@ rule running_sklearnFastICA:
         M -> Number of components to generate.
         n -> Number of iteration. Each iteration only differs by the
             optimisation starting point.
+        std -> Building the ICA model only with genes that have a standard
+            deviation (of expression value) this is at least std*(mean standard
+            deviation for all genes). Keeps all the gene at std = 0. 
     """
     input:
-        counts = get_counts,
+        counts = get_counts
     output:
-        components = temp("results/ICA/sklearnFastICA/{dataset}/M{M}_n{n}_std{std}/raw_components.tsv"),
-        fit_min = "results/ICA/sklearnFastICA/{dataset}/M{M}_n{n}_std{std}/fit_min.txt",
+        components = temp(ICAmodel_path + "raw_components.tsv"),
+        fit_min = ICAmodel_path + "fit_min.txt",
     params:
-        max_it = 50000,
-        tolerance = 1e-20
+        max_it = 100000,
+        tolerance = 1e-18
     threads:
         40
     conda:
@@ -53,10 +51,10 @@ rule flipping_ICA_components:
         have a strong negative correlation.
     """
     input:
-        components = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/raw_components.tsv",
+        components = rules.running_sklearnFastICA.output.components
     output:
-        components = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/components.tsv",
-        corr_components =  "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/corr_components.json",
+        components = ICAmodel_path + "components.tsv",
+        corr_components =  ICAmodel_path + "corr_components.json",
     params:
         minimal_occurence = 0.20,
         threshold = 0.90
@@ -72,11 +70,11 @@ rule merging_n_components:
         into single components.
     """
     input:
-        components = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/components.tsv",
-        corr_components = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/corr_components.json",
+        components = rules.flipping_ICA_components.output.components,
+        corr_components = rules.flipping_ICA_components.output.corr_components,
     output:
-        components_mean = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/components_mean.tsv",
-        components_std = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/components_std.tsv",
+        components_mean = ICAmodel_path + "components_mean.tsv",
+        components_std = ICAmodel_path + "components_std.tsv",
     conda:
         "../envs/ICA_python.yaml"
     script:
@@ -89,41 +87,24 @@ rule filter_sigma_components:
         components, keeping only gene that are sigma sigma away from mean.
     """
     input:
-        components_mean = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/components_mean.tsv",
+        components_mean = rules.merging_n_components.output.components_mean
     output:
-        filt_genes = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/filtered_components/sigma_{sigma}/components.tsv",
+        filt_genes = ICAmodel_path + "sigma_{sigma}/filtered_components/components.tsv",
     conda:
         "../envs/ICA_python.yaml"
     script:
         "../scripts/running_ICA/4_filter_sigma_components.py"
 
 
-rule component_agnostic_model:
-    """
-
-    """
-    input:
-        get_components_range
-    output:
-        components = "results/ICA/{ICAmethod}/{dataset}/combine_{min}to{max}_n{n}_std{std}/components.tsv",
-        corr_components = "results/ICA/{ICAmethod}/{dataset}/combine_{min}to{max}_n{n}_std{std}/corr_components.json",
-    params:
-        threshold = 0.90
-    conda:
-        "../envs/ICA_python.yaml"
-    script:
-        "../scripts/running_ICA/5_component_agnostic_model.py"
-
-
 rule dataset_projection_on_filtered_components:
     """
-
+        Calculate the dot product between gene weights and gene expression data
     """
     input:
         counts = get_counts,
-        components = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/filtered_components/sigma_{sigma}/components.tsv",
+        components = rules.filter_sigma_components.output.filt_genes
     output:
-        projection = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/filtered_components/sigma_{sigma}/projection.tsv",
+        projection = ICAmodel_path + "sigma_{sigma}/filtered_components/projection.tsv",
     conda:
         "../envs/ICA_python.yaml"
     script:
@@ -131,8 +112,12 @@ rule dataset_projection_on_filtered_components:
 
 
 rule dataset_variable_boolean:
+    """
+        Creates a binary matrix with information of software used for each
+        pipeline
+    """
     input:
-        counts = get_counts,
+        counts = get_counts
     output:
         var_bool = "results/ICA/variable_boolean/{dataset}.tsv",
     conda:
@@ -142,11 +127,14 @@ rule dataset_variable_boolean:
 
 
 rule projection_boolean_correlation:
+    """
+
+    """
     input:
         projection = rules.dataset_projection_on_filtered_components.output.projection,
         var_bool = rules.dataset_variable_boolean.output.var_bool,
     output:
-        proj_corr = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/filtered_components/sigma_{sigma}/projection_correlation.tsv",
+        proj_corr = ICAmodel_path + "sigma_{sigma}/filtered_components/projection_correlation.tsv",
     conda:
         "../envs/ICA_python.yaml"
     script:
@@ -161,7 +149,7 @@ rule list_distribution_component:
         proj_corr = rules.projection_boolean_correlation.output.proj_corr,
         var_bool = rules.dataset_variable_boolean.output.var_bool,
     output:
-        list_comp = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/filtered_components/sigma_{sigma}/comp_list.txt",
+        list_comp = ICAmodel_path + "sigma_{sigma}/filtered_components/comp_list.txt",
     conda:
         "../envs/ICA_python.yaml"
     script:
@@ -169,71 +157,21 @@ rule list_distribution_component:
 
 
 rule extracting_gene_list:
+    """
+        For all components in a model, create a .txt file with Ensembl IDs of
+        the significant genes (respectively to sigma), separated by positive
+        and negative weight.
+
+        This rule only specifies an output token in lieu of all the generated
+        files. This token must be use in inputs of rules using gene lists.
+    """
     input:
         filt_genes = rules.filter_sigma_components.output.filt_genes
     output:
-        tkn = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/gene_list/comp_sigma{sigma}/.tkn"
+        tkn = ICAmodel_path + "sigma_{sigma}/gene_list/.tkn"
     params:
-        directory = "results/ICA/{ICAmethod}/{dataset}/{ICA_run}/gene_list/comp_sigma{sigma}"
+        directory = ICAmodel_path + "sigma_{sigma}/gene_list"
     conda:
         "../envs/ICA_python.yaml"
     script:
         "../scripts/running_ICA/10_extracting_gene_list.py"
-
-
-rule running_sklearnFastICA_bootstraped:
-    """
-        Same as rule.running_sklearnFastICA.
-
-        Except : Adding a bootstrapped parameter, generating components using
-        {boot}% of original data.
-    """
-    input:
-        counts = get_counts,
-    output:
-        components = "results/ICA/sklearnFastICA/{dataset}/M{M}_n{n}_std{std}/stability/components_{boot}_strapped.tsv",
-        fit_min = "results/ICA/sklearnFastICA/{dataset}/M{M}_n{n}_std{std}/stability/fit_min_{boot}_strapped.txt",
-    params:
-        max_it = 50000,
-        tolerance = 1e-20
-    threads:
-        32
-    conda:
-        "../envs/ICA_python.yaml"
-    script:
-        "../scripts/running_ICA/1_running_sklearnFastICA.py"
-
-
-rule bootstrapped_stability_correlation:
-    """
-
-    """
-    input:
-        components = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/components_mean.tsv",
-        boot_components = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/stability/components_{boot}_strapped.tsv",
-    output:
-        plot = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/stability/{boot}_analysis.png",
-    params:
-        min_correlation = 0.75
-    conda:
-        "../envs/ICA_python.yaml"
-    script:
-        "../scripts/running_ICA/12_bootstrapped_stability_correlation.py"
-
-
-rule bootstrapped_stability_n_genes:
-    """
-
-    """
-    input:
-        components = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/components_mean.tsv",
-        boot_components = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/stability/components_{boot}_strapped.tsv",
-    output:
-        plot = "results/ICA/{ICAmethod}/{dataset}/M{M}_n{n}_std{std}/stability/{boot}_analysis_n_genes.png",
-    params:
-        sigma = 4,
-        min_genes = 0.50
-    conda:
-        "../envs/ICA_python.yaml"
-    script:
-        "../scripts/running_ICA/12_bootstrapped_stability_n_genes.py"

@@ -12,8 +12,7 @@ def logcosh_gs(s, a=1):
 
 def prepare_data(dataset, std_from_mean):
     """
-    Centering data, and keeping only genes that are at least std_from_mean std
-    from the std mean.
+    Keeping only genes that are at least std_from_mean std from the std mean.
 
     Use std_from_mean = 0 to keep all genes.
     """
@@ -31,7 +30,7 @@ def zca_whitening_matrix(X):
         Rows: Variables
         Columns: Observations
     OUTPUT: ZCAMatrix: [M x M] matrix -> Not true anymore
-    
+
     Code from :
     https://stackoverflow.com/questions/31528800/how-to-implement-zca-whitening-python
 

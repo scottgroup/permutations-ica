@@ -1,5 +1,14 @@
 from snakemake.io import expand
 
+
+def get_components_range(wildcards):
+    """ Returns list of paths with wildards. M is specified, from min to max """
+    return expand(
+        "results/ICA/{{ICAmethod}}/{{dataset}}/M{M}_n{{n}}_std{{std}}/components_mean.tsv",
+        M=range(int(wildcards.min), int(wildcards.max)+1)
+    )
+
+
 def get_ICA_running(configs, datasets):
     """
     Return all necessary files for computations of the model.

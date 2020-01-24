@@ -12,6 +12,7 @@ def numpy2r(mat):
     else:
         return robj.FloatVector(mat)
 
+
 class Dataset():
 
     def __init__(self, path, data_slice):
@@ -27,9 +28,6 @@ class Dataset():
 
         # Managing NaN
         self.transform_NaN(drop=True)
-
-        # Transform data to CPM
-        # self.data2CPM()
 
         # Simple scaling
         self.scaling_data()
@@ -75,13 +73,8 @@ class Dataset():
         elif not drop:
             self.data.fillna(value=0, inplace=True)
 
-    def data2CPM(self):
-        """ Transform each in CPM """
-        sum_row = self.data.sum(axis=1)
-        self.data = self.data.div(sum_row, axis=0).mul(1e6, axis=0)
-
     def scaling_data(self):
-        """ Scaling data """
+        """ Scaling data using VST from DESeq2 """
 
         DESeq2 = importr('DESeq2')
         matInt = np.array(self.data).astype(int).T

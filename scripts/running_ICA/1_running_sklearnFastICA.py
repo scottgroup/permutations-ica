@@ -2,16 +2,9 @@ import numpy as np
 import pandas as pd
 
 from Dataset import Dataset
-from ICAmethods.sklearnFastICA import sklearnFastICA
-from ICAmethods.consICA import consICA
+from sklearnFastICA import sklearnFastICA
 import running_ICA_utils as rICA
-# from pyProDenICA import pyProDenICA, ProDenICA
-# from pyFastICA import running_fastICA
 
-
-# TODO : split this. Must be able to specify which envs to use.
-#   will need a running_ICA_utils.py file with common functions
-#   and a running_{ICAmethod}.py for each of the different methods.
 
 def run_ICA(data, M, max_it, tolerance, model_i):
     """
@@ -77,15 +70,12 @@ while i < n:
     _components, crit0 = run_ICA(sub_data, M, max_it, tolerance, i)
 
     if _components is not None:
-        print('Success ', str(i))
         fit_min.append(crit0)
         if i == 0:
             components = _components
         else:
             components = pd.concat([components, _components], axis=1)
         i += 1
-    else:
-        print('\t Retrying ', str(i))
 
 
 # Writing components to disk
