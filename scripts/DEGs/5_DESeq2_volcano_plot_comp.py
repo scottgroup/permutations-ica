@@ -7,24 +7,21 @@ for k, v in rcParams.items():
     plt.rcParams[k] = v
 
 
-# All colors
-colors = {
-    # Blue
-    "testis": "#1f77b4ff", "cutadapt": "#1f77b4ff", "ensembl92": "#1f77b4ff",
-    "HISAT2": "#1f77b4ff", "cufflinks": "#1f77b4ff",
-    # Green
-    "heart": "#2ca02cff", "refseq": "#2ca02cff",
-    "tophat2": "#2ca02cff", "htseq": "#2ca02cff",
-    # Orange
-    "thyroid": "#ff7f0eff", "trimmomatic": "#ff7f0eff",
-    "ensembl98": "#ff7f0eff", "STAR": "#ff7f0eff", "featureCounts": "#ff7f0eff",
-    # Red
-    "colon": "#da4144ff"
-}
-
-
-min_foldchange = snakemake.params.fold_change
-min_pval = snakemake.params.pvalue
+def reading_file(path):
+    up, down = list(), list()
+    with open(path, 'r') as f:
+        for line in f.readlines():
+            line = line.strip()
+            if line == '>Positive genes':
+                reading_up = True
+            elif line == '>Negative genes':
+                reading_up = False
+            else:
+                if reading_up:
+                    up.append(line)
+                else:
+                    down.append(line)
+    return up, down
 
 
 def get_pos_from_sample(sample):
@@ -35,16 +32,9 @@ def get_pos_from_sample(sample):
                 return i
 
 
-def plotting_scatter(ax, x, y, filt, color, cut=False):
+def plotting_scatter(ax, x, y, color='k'):
     """ Creates the scatter plots """
-    x = x[filt]
-    y = y[filt]
-
-    if cut:
-        x = x[np.arange(0, len(x), 3)]
-        y = y[np.arange(0, len(y), 3)]
-
-    ax.scatter(x, y, color=color, alpha=1, s=2)
+    ax.scatter(x, y, alpha=1, s=2, color=color)
 
 
 def plotting_nums(ax, ndown, nup):
@@ -53,35 +43,38 @@ def plotting_nums(ax, ndown, nup):
     ax.text(25, 0, nup, horizontalalignment='right')
 
 
-def plotting_volcano(ax, data, sample, min_pval, min_foldchange):
+def plotting_volcano(ax, data, sample):
     """ Main filtering and plotting function """
-    sample_down = sample.split('_')[0]
-    sample_up = sample.split('_')[-1]
-
     # Data
-    foldchange = data['log2FoldChange']
-    pvalue = -np.log10(data['padj'])
-    min_pval = -np.log10(min_pval)
+    data['padj'] = -np.log10(data['padj'])
 
-    # Filters
-    filt_up = (foldchange > min_foldchange) & (pvalue > min_pval)
-    filt_down = (foldchange < -min_foldchange) & (pvalue > min_pval)
-    filt_mass = (foldchange < 2) & (pvalue < 35)
-    filt_other = ~(filt_up | filt_down | filt_mass)
+    # Data up and down
+    up_data = data[data[data.columns[0]].isin(
+        [ens2symbol[g] for g in up]
+    )]
+    down_data = data[data[data.columns[0]].isin(
+        [ens2symbol[g] for g in down]
+    )]
 
-    # Plotting
-    plotting_scatter(ax, foldchange, pvalue, filt_up, colors[sample_up])
-    plotting_scatter(ax, foldchange, pvalue, filt_down, colors[sample_down])
-    plotting_scatter(ax, foldchange, pvalue, filt_mass, 'k', cut=True)
-    plotting_scatter(ax, foldchange, pvalue, filt_other, 'k')
 
-    plotting_nums(ax, np.sum(filt_down), np.sum(filt_up))
+    plotting_scatter(ax, data['log2FoldChange'], data['padj'])
+    plotting_scatter(ax, up_data['log2FoldChange'], up_data['padj'], 'r')
+    plotting_scatter(ax, down_data['log2FoldChange'], down_data['padj'], 'b')
 
     ax.set_xlim(-32, 32)
     ax.set_ylim(-10, 320)
     ax.set_title(sample)
 
 
+# Reading component file
+fcomp = snakemake.input.gene_list
+up, down = reading_file(fcomp)
+
+# Loading HGNC data
+hgnc_df = pd.read_csv(snakemake.input.HGNC, sep='\t')
+ens2symbol = hgnc_df.set_index('ensembl_id')['symbol'].to_dict()
+
+# Getting into drawing
 nrows = 4
 ncols = 3
 used_subplots = np.zeros((nrows, ncols))
@@ -103,7 +96,7 @@ for csv in snakemake.input.DEGs:
     # Correcting for p-value == 0, replacing with approx smallest value
     data.loc[data['padj'] == 0, 'padj'] = 2.5e-308
 
-    plotting_volcano(axes[y, x[y]], data, sample, min_pval=min_pval, min_foldchange=min_foldchange)
+    plotting_volcano(axes[y, x[y]], data, sample)
     if x[y] != 0:
         axes[y, x[y]].set_yticks([])
     else:

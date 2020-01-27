@@ -1,17 +1,20 @@
 from snakemake.io import expand
 
 def get_permutations(k):
+    """ Get permutation for pairwise comparisons """
     for i in range(1, k):
         for j in range(i+1, k+1):
             yield i-1, j-1
 
-def get_DEG_results(dataset, config):
+
+def get_DEG_results(ICAmodel, config):
+    """ For an ICAmodel, creates the different files """
     DEG_experiments = list()
-    fpath = "results/DESeq2/{{dataset}}/{variable}/{tool}_vs_{tool2}.csv"
+    fpath = "results/DESeq2/{{ICAmodel}}/{variable}/{tool}_vs_{tool2}.csv"
 
     # Getting variable dictionnary
     var_dict = config['tools']
-    for k, v in config['ICA_datasets'][dataset]['variables'].items():
+    for k, v in config['ICA_models'][ICAmodel]['variables'].items():
         var_dict[k] = v
 
     # Iterate through the variables
@@ -23,25 +26,17 @@ def get_DEG_results(dataset, config):
             )
             DEG_experiments.append(_fpath)
 
-    # Iterate through the tissues
-    tissues = list(config['datasets'].keys())
-    for i, j in get_permutations(len(tissues)):
-        _fpath = fpath.format(
-            variable='tissue', tool=tissues[i], tool2=tissues[j]
-        )
-        DEG_experiments.append(_fpath)
-
     return DEG_experiments
 
 
-def get_DESeq(config, datasets):
-    """ """
+def get_DESeq(config, ICAmodels):
+    """ Run the DESeq analyses for all ICA models """
     all_files = list()
 
-    for dataset in datasets:
+    for ICAmodel in ICAmodels:
         DEGs_exps = [
-            file.format(dataset=dataset)
-            for file in get_DEG_results(dataset, config)
+            file.format(ICAmodel=ICAmodel)
+            for file in get_DEG_results(ICAmodel, config)
         ]
         all_files.extend(DEGs_exps)
 

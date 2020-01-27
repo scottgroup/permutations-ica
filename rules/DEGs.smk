@@ -3,16 +3,17 @@ from DEGs import get_DEG_results
 
 def get_counts(wildcards):
     """ """
-    fname = config['ICA_datasets'][wildcards.dataset]['params']['counts']
+    fname = config['ICA_models'][wildcards.ICAmodel]['params']['counts']
     return rna_seq_cartesian_product("results/cartesian_product/{dataset}.tsv".format(dataset=fname))
 
 
 rule prepare_data_for_DESeq2:
+    """ Format the counts and samples matrices for DESeq2 """
     input:
         dataset = get_counts,
     output:
-        counts = "results/DESeq2/{dataset}/counts.tsv",
-        samples = "results/DESeq2/{dataset}/samples.tsv"
+        counts = "results/DESeq2/{ICAmodel}/counts.tsv",
+        samples = "results/DESeq2/{ICAmodel}/samples.tsv"
     conda:
         "../envs/ICA_python.yaml"
     script:
@@ -20,13 +21,14 @@ rule prepare_data_for_DESeq2:
 
 
 rule init_DESeq2:
+    """ Create a RDS file for the different variables """
     input:
         counts = rules.prepare_data_for_DESeq2.output.counts,
         samples = rules.prepare_data_for_DESeq2.output.samples
     output:
-        rds = "results/DESeq2/{dataset}/deseq2_{variable}_base_{tool}.rds"
+        rds = "results/DESeq2/{ICAmodel}/deseq2_{variable}_base_{tool}.rds"
     log:
-        "logs/DESeq2/init_DESeq2/{dataset}_{variable}_{tool}.log"
+        "logs/DESeq2/init_DESeq2/{ICAmodel}_{variable}_{tool}.log"
     conda:
         "../envs/DESeq2.yaml"
     threads:
@@ -36,14 +38,15 @@ rule init_DESeq2:
 
 
 rule DESeq2:
+    """ Calculate the DEA """
     input:
         rds = rules.init_DESeq2.output.rds
     output:
-        results = "results/DESeq2/{dataset}/{variable}/{tool}_vs_{tool2}.csv"
+        results = "results/DESeq2/{ICAmodel}/{variable}/{tool}_vs_{tool2}.csv"
     conda:
         "../envs/DESeq2.yaml"
     log:
-        "logs/DESeq2/DESeq2_{dataset}/{variable}_{tool}_{tool2}.log"
+        "logs/DESeq2/DESeq2_{ICAmodel}/{variable}_{tool}_{tool2}.log"
     threads:
         40
     script:
@@ -51,15 +54,35 @@ rule DESeq2:
 
 
 rule DESeq2_volcano_plot:
-    """ TODO : rework this function """
+    """
+        Volcano plots of the different workflow variables, where genes above a
+        certain fold_change and p-value tresholds are colored.
+    """
     input:
-        DEGs = lambda w: get_DEG_results("{dataset}".format(**w), config)
+        DEGs = lambda w: get_DEG_results("{ICAmodel}".format(**w), config)
     output:
-        plot = "results/DESeq2/plots/{dataset}.png"
+        plot = "results/DESeq2/plots/{ICAmodel}.png"
     params:
         fold_change = 2,
-        pvalue = 1e-8
+        pvalue = 1e-35
     conda:
         "../envs/ICA_python.yaml"
     script:
         "../scripts/DEGs/4_DESeq2_volcano_plot.py"
+
+
+rule DESeq2_volcano_plot_comp:
+    """
+        Volcano plots of the different workflow variables, where significant
+        negative and positives genes are colored.
+    """
+    input:
+        DEGs = lambda w: get_DEG_results("{ICAmodel}".format(**w), config),
+        gene_list = "results/ICA/sklearnFastICA/{ICA_path}/sigma_{sigma}/gene_list/comp_{comp}.txt",
+        HGNC = rna_seq_cartesian_product("data/references/hgnc.txt")
+    output:
+        plot = "results/DESeq2/plots/{ICA_path}/{ICAmodel}_sigma{sigma}_comp{comp}.svg"
+    conda:
+        "../envs/ICA_python.yaml"
+    script:
+        "../scripts/DEGs/5_DESeq2_volcano_plot_comp.py"

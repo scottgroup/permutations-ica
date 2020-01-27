@@ -3,7 +3,6 @@ import pandas as pd
 
 def slice_dataset(df, data_slice):
     """ For the variables in data_slice, only keep specified values """
-
     df = df.transpose()
     slice_list = list()
     for idx in df.index.names:
@@ -32,10 +31,8 @@ data = pd.read_csv(
 data.dropna(axis=0, inplace=True)
 
 # Removing unused variables
-data_slice = snakemake.config['ICA_datasets'][snakemake.wildcards.dataset]['variables']
+data_slice = snakemake.config['ICA_models'][snakemake.wildcards.ICAmodel]['variables']
 data = slice_dataset(data, data_slice)
-
-print(data)
 
 # Compression the multi-columns
 data.columns = data.columns.map('|'.join).str.strip('|')
