@@ -9,8 +9,7 @@ from sklearn.cluster import AgglomerativeClustering
 
 
 def get_bdiagonal(mat, threshold=0.9):
-    """
-    """
+    """ Creates a theoric block diagonal matrix """
     d = np.shape(mat)[0]
     blocks = np.zeros((d, d))
 
@@ -21,6 +20,7 @@ def get_bdiagonal(mat, threshold=0.9):
 
     return blocks
 
+
 def get_error(mat, bdiagonal):
     """ Calculating the MSE """
     err = np.mean((mat - bdiagonal)**2)
@@ -28,6 +28,7 @@ def get_error(mat, bdiagonal):
 
 
 def getting_components(path):
+    """ Loading data and clustering """
     # Reading data
     components = pd.read_csv(
         path,
@@ -36,8 +37,9 @@ def getting_components(path):
     X = components.corr().values
 
     """
-    Inspired from
+    Clustering code adapted from
     https://github.com/TheLoneNut/CorrelationMatrixClustering/blob/master/CorrelationMatrixClustering.ipynb
+    MIT License in folder
     """
 
     cluster_th = 4
@@ -90,5 +92,4 @@ for file in snakemake.input:
     data.append([M_id, metric])
 
 df = pd.DataFrame(data)
-print(df)
 df.to_csv(snakemake.output.data, sep='\t', index=None)

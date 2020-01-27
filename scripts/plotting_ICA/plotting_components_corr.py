@@ -55,19 +55,17 @@ X = components.corr().values
 d = distance.pdist(X)
 L = linkage(d, method='complete')
 ind = fcluster(L, 0.1*d.max(), 'distance')
-print(ind)
 
 # Creating the figure
 fig = plt.figure(figsize=(20,20))
 ax = fig.add_subplot(111)
-cax = ax.matshow(components.corr().values, interpolation=None, vmin=-1, vmax=1)
+cax = ax.imshow(
+    components.corr().values,
+    interpolation=None, vmin=-1, vmax=1,
+    cmap=mpl.cm.get_cmap('seismic_r')
+)
 # Adding colorbar
 fig.colorbar(cax, norm=mpl.colors.Normalize(vmin=-1, vmax=1))
-# Adding labels
-ax.set_xticks(range(0, len(components.columns)))
-ax.set_xticklabels(components.columns.tolist())
-ax.set_yticks(range(0, len(components.columns)))
-ax.set_yticklabels(components.columns.tolist())
 
 # Saving graph to file
 plt.savefig(snakemake.output.plot)

@@ -8,7 +8,7 @@ sys.setrecursionlimit(10000)
 
 # Loading data
 data = pd.read_csv(snakemake.input.components, sep='\t', index_col=[0,1,2,3])
-threshold = snakemake.params.threshold
+threshold = float(snakemake.params.threshold)
 
 # Calculating hierarchy
 Z = hierarchy.linkage(data.T, 'single')

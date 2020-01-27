@@ -3,12 +3,16 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 
+from plotting_utils import mm2inch, rcParams
+for k, v in rcParams.items():
+    plt.rcParams[k] = v
+
+
 k_neigh = int(snakemake.params.k_neighbour)
 vars = ['tissue', 'trimmer', 'annotation', 'aligner', 'quantifier']
 
 # Importing projection
 proj = pd.read_csv(snakemake.input.proj, sep='\t', index_col=[0,1,2,3,4,5])
-
 
 # Initialize score dataframe
 index = list()
@@ -50,23 +54,24 @@ for var in vars:
 fig, axes = plt.subplots(
     nrows=len(vars), ncols=1,
     gridspec_kw={'height_ratios': height},
-    figsize=(14, 12)
+    figsize=mm2inch((86, 100))
 )
 
 for i, var in enumerate(vars):
     sns.heatmap(
         score_df[score_df.index.isin(tool_dict[var])],
-        linewidths=0.5,
-        annot=True, ax=axes[i],
+        linewidths=0.5, ax=axes[i],
         cmap="YlGnBu", vmax=1, vmin=0.30
     )
+
     axes[i].set_yticklabels(labels=axes[i].get_yticklabels(), rotation=0)
 
     if i < len(vars)-1:
         axes[i].set_xticks([])
     else:
         axes[i].set_xlabel('Components')
+        xlabels = axes[i].get_xticklabels()
+        axes[i].set_xticklabels([str(int(x.get_text())+1) for x in xlabels])
 
-
-plt.subplots_adjust(hspace=0.1, top=0.95, right=0.95, bottom=0.1)
+plt.tight_layout()
 plt.savefig(snakemake.output.plot)
