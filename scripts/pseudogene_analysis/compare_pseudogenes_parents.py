@@ -1,39 +1,20 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 from scipy import stats
 
-plt.rcParams['svg.fonttype'] = 'none'
-plt.rcParams['font.size'] = 6
-plt.rcParams['font.family'] = 'sans-serif'
-plt.rcParams['font.sans-serif'] = ['Arial']
-
-
-def mm2inch(*tupl):
-    """
-    https://stackoverflow.com/questions/14708695/specify-figure-size-in-centimeter-in-matplotlib
-    """
-    inch = 25.4
-    if isinstance(tupl[0], tuple):
-        return tuple(i/inch for i in tupl[0])
-    else:
-        return tuple(i/inch for i in tupl)
+from plotting_utils import mm2inch, rcParams
+for k, v in rcParams.items():
+    plt.rcParams[k] = v
 
 
 def reading_file(path):
-    up, down = list(), list()
+    genes = list()
     with open(path, 'r') as f:
         for line in f.readlines():
             line = line.strip()
-            if line == '>Positive genes':
-                reading_up = True
-            elif line == '>Negative genes':
-                reading_up = False
-            else:
-                if reading_up:
-                    up.append(line)
-                else:
-                    down.append(line)
-    return up, down
+            genes.append(line)
+    return genes
 
 # Reading files
 # Using data from http://pseudogene.org/psicube/index.html
@@ -55,7 +36,8 @@ data = pd.read_csv(
 data.dropna(axis=0, inplace=True)
 
 # Reading gene list
-up, down = reading_file(snakemake.params.gene_list)
+lgenes = reading_file(snakemake.params.gene_list)
+lgenes2 = reading_file(snakemake.params.gene_list2)
 
 # Parsing df_biotype
 extracting = {
@@ -93,22 +75,18 @@ pseudo_count['pseudogene'] = pseudo_count.index.map(pseudo_dict)
 pseudo_count.fillna(0, inplace=True)
 
 # Plotting
-plt.figure(figsize=mm2inch((40,65)))
+plt.figure(figsize=mm2inch((40,50)))
 plt.boxplot(
     [
-        pseudo_count[pseudo_count.index.isin(up)]['pseudogene'],
-        pseudo_count[~pseudo_count.index.isin(up)]['pseudogene']
+        pseudo_count[pseudo_count.index.isin(lgenes)]['pseudogene'],
+        pseudo_count[pseudo_count.index.isin(lgenes2)]['pseudogene']
     ],
     widths=.8
 )
-plt.ylim([0,159])
+
+plt.ylim([-0.1, 160])
 plt.ylabel('Number of processed pseudogene')
+plt.yscale('function', functions=(np.arcsinh, np.sinh))
+plt.yticks([0, 1, 3, 7, 15, 30, 75, 150])
 plt.tight_layout()
 plt.savefig(snakemake.output.plot)
-
-stat = stats.ttest_ind(
-    pseudo_count[pseudo_count.index.isin(up)],
-    pseudo_count[~pseudo_count.index.isin(up)],
-    equal_var=False
-)
-print(stat)
