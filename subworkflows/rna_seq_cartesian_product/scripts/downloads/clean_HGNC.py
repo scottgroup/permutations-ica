@@ -18,7 +18,7 @@ for idx, row in hgnc_df.iterrows():
         gene2 = row[g2]
         if gene1 == gene2 and gene1 != 'NaN':
             _line.append(gene1)
-        elif gene1 == 'NaN' and gene2!= 'NaN':
+        elif gene1 == 'NaN' and gene2 != 'NaN':
             _line.append(gene2)
         elif gene1 != 'NaN':
             _line.append(gene1)

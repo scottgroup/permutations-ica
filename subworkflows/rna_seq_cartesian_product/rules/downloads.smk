@@ -7,7 +7,7 @@ def get_ebi_ftp(wildcards):
 
 
 def get_fastq_R1():
-    """ Generates a list of FASTQ R1 files for the SRA extraction """
+    """ Generates a list of FASTQ R1 files """
     file_path = "data/datasets/{tissue}/{dataset}.R1.fastq.gz"
     dataset_dict = config['datasets']
 
@@ -19,7 +19,7 @@ def get_fastq_R1():
 
 
 rule download_datasets:
-    """ """
+    """ Download all sequencing datasets """
     output:
         R1 = config['path']['raw_fastq']['R1'],
         R2 = config['path']['raw_fastq']['R2']
@@ -31,7 +31,7 @@ rule download_datasets:
 
 
 rule download_annotations:
-    """ """
+    """ Download the different annotations as .GTF """
     output:
         "data/references/{annotation}.gtf"
     params:
@@ -43,7 +43,7 @@ rule download_annotations:
 
 
 rule download_genome:
-    """ """
+    """ Download genome """
     output:
         config['path']['genome']
     shell:
@@ -52,7 +52,10 @@ rule download_genome:
 
 
 rule translateRefseqChr:
-    """ """
+    """
+        Transform NCBI chr ID to numeric value.
+        Example : NC_000001.11 -> 1
+    """
     input:
         "data/references/refseq.gtf"
     output:
@@ -64,8 +67,10 @@ rule translateRefseqChr:
 
 
 rule extractGTFgeneID_ensembl:
-    """ """
-    #TODO: Verify if in phase
+    """
+        From an Ensembl GTF, create a two column file with gene symbol and
+        Ensembl ID
+    """
     input:
         gtf = "data/references/ensembl{ens_version}.gtf"
     output:
@@ -82,7 +87,10 @@ rule extractGTFgeneID_ensembl:
 
 
 rule extractGTFgeneID_refseq:
-    """ """
+    """
+        From a RefSeq GTF, create a three column file with gene symbol, RefSeq
+        ID and HGNC ID.
+    """
     input:
         "data/references/clean_refseq_gtf.tkn",
         gtf = "data/references/refseq.gtf"
@@ -95,7 +103,10 @@ rule extractGTFgeneID_refseq:
 
 
 rule download_HGNC:
-    """ Downloads an HGNC table with the custom download tool """
+    """
+        Downloads an HGNC table with the custom download tool. Downloads data
+        provided by HGNC and by external sources.
+    """
     output:
         temp("data/references/hgnc.txt.temp")
     shell:
@@ -103,7 +114,11 @@ rule download_HGNC:
 
 
 rule clean_HGNC:
-    """ """
+    """
+        For some HGNC ID, data from HGNC and external sources is not equal. If
+        one entry for a source is missing, the other source is used. If the two
+        sources do not have the same data, HGNC is prioritized.
+    """
     input:
         hgnc = "data/references/hgnc.txt.temp"
     output:
@@ -115,7 +130,10 @@ rule clean_HGNC:
 
 
 rule get_datasets_depth:
-    """ """
+    """
+        Calculates a scaling metric based on the number of lines in the FASTQ
+        files to approximate depth of the dataset.
+    """
     input:
         **get_fastq_R1()
     output:
@@ -127,7 +145,7 @@ rule get_datasets_depth:
 
 
 rule indexGenome:
-    """ """
+    """ Index the genome using Samtools """
     input:
         config['path']['genome']
     output:

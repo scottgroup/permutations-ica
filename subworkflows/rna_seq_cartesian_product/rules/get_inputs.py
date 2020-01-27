@@ -18,7 +18,7 @@ def download_list(config):
         )
     )
     # Correcting refseq
-    file_list.append("data/references/clean_refseq_gtf}.tkn")
+    file_list.append("data/references/clean_refseq_gtf.tkn")
 
     # For each tissue
     for tissue in config['datasets'].keys():

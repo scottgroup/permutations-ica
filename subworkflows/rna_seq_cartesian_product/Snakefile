@@ -18,3 +18,9 @@ include: "rules/aligner.smk"
 include: "rules/quantifier.smk"
 include: "rules/trimmer.smk"
 include: "rules/utils.smk"
+
+
+# Run this if working on a cluster where nodes do not have an internet access
+rule internet_download:
+    input:
+        get_inputs
