@@ -1,12 +1,13 @@
 
 def get_ebi_ftp(wildcards):
+    """ Using a SRA dataset ID, generates to ftp download URL """
     data_id = wildcards.data_id
     url = ["ftp://ftp.sra.ebi.ac.uk/vol1/fastq", data_id[:6], data_id, data_id]
     return '/'.join(url)
 
 
 def get_fastq_R1():
-    """ """
+    """ Generates a list of FASTQ R1 files for the SRA extraction """
     file_path = "data/datasets/{tissue}/{dataset}.R1.fastq.gz"
     dataset_dict = config['datasets']
 
@@ -18,6 +19,7 @@ def get_fastq_R1():
 
 
 rule download_datasets:
+    """ """
     output:
         R1 = config['path']['raw_fastq']['R1'],
         R2 = config['path']['raw_fastq']['R2']
@@ -29,17 +31,19 @@ rule download_datasets:
 
 
 rule download_annotations:
+    """ """
     output:
-        "data/references/{annotation}.{gfile}"
+        "data/references/{annotation}.gtf"
     params:
         link = lambda wildcards:
-            config["download"][wildcards.annotation][wildcards.gfile]
+            config["download"][wildcards.annotation]
     shell:
         "wget --quiet -O {output}.gz {params.link} && "
         "gunzip {output}.gz "
 
 
 rule download_genome:
+    """ """
     output:
         config['path']['genome']
     shell:
@@ -48,17 +52,19 @@ rule download_genome:
 
 
 rule translateRefseqChr:
+    """ """
     input:
-        "data/references/refseq.{gfile}"
+        "data/references/refseq.gtf"
     output:
-        "data/references/clean_refseq_{gfile}.tkn"
+        "data/references/clean_refseq_gtf.tkn"
     log:
-        "logs/translateRefseqChr/{gfile}.log"
+        "logs/translateRefseqChr/gtf.log"
     script:
         "../scripts/downloads/translateRefseqChr.py"
 
 
 rule extractGTFgeneID_ensembl:
+    """ """
     #TODO: Verify if in phase
     input:
         gtf = "data/references/ensembl{ens_version}.gtf"
@@ -76,6 +82,7 @@ rule extractGTFgeneID_ensembl:
 
 
 rule extractGTFgeneID_refseq:
+    """ """
     input:
         "data/references/clean_refseq_gtf.tkn",
         gtf = "data/references/refseq.gtf"
@@ -96,6 +103,7 @@ rule download_HGNC:
 
 
 rule clean_HGNC:
+    """ """
     input:
         hgnc = "data/references/hgnc.txt.temp"
     output:
@@ -107,6 +115,7 @@ rule clean_HGNC:
 
 
 rule get_datasets_depth:
+    """ """
     input:
         **get_fastq_R1()
     output:
@@ -115,3 +124,15 @@ rule get_datasets_depth:
         "../envs/python.yaml"
     script:
         "../scripts/downloads/get_datasets_depth.py"
+
+
+rule indexGenome:
+    """ """
+    input:
+        config['path']['genome']
+    output:
+        config['path']['genome'] + '.fai'
+    conda:
+        "../envs/samtools.yaml"
+    shell:
+        "samtools faidx {input}"

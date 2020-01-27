@@ -13,18 +13,13 @@ def download_list(config):
     # Annotations
     file_list.extend(
         expand(
-            "data/references/{annotation}.{gfile}",
-            annotation=config['tools']['annotation'],
-            gfile=['gtf', 'gff3']
+            "data/references/{annotation}.gtf",
+            annotation=config['tools']['annotation']
         )
     )
     # Correcting refseq
-    file_list.extend(
-        expand(
-            "data/references/clean_refseq_{gfile}.tkn",
-            gfile=['gtf', 'gff3']
-        )
-    )
+    file_list.append("data/references/clean_refseq_gtf}.tkn")
+
     # For each tissue
     for tissue in config['datasets'].keys():
         file_list.extend(
