@@ -26,7 +26,7 @@ rule combine_quantification:
 rule merge_quantifications:
     """
         Merge the different quantifications from rules.combine_quantification
-        using HGNC to bridge between IDs. 
+        using HGNC to bridge between IDs.
     """
     input:
         quants = expand(

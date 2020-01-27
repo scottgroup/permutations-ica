@@ -5,7 +5,6 @@ import rules.get_inputs as get_inputs
 # Defining wildcards constraints
 wildcard_constraints:
     annotation = "({})".format("|".join(config['tools']['annotation'])),
-    gfile = "(gtf|gff3)",
     trimmer = "(trimmomatic|cutadapt)",
     datasets = "({})".format("|".join(config['datasets'].keys())),
     category = "(data_id|annotation|tissue|quantifier|aligner)",
@@ -19,8 +18,3 @@ include: "rules/aligner.smk"
 include: "rules/quantifier.smk"
 include: "rules/trimmer.smk"
 include: "rules/utils.smk"
-
-rule all:
-    input:
-        "results/tissue_NaN.tsv",
-        "results/tissue_noNaN.tsv"
