@@ -58,18 +58,3 @@ def quantification_results(config, use_annotation=False):
         )
         file_list.extend(_counts)
     return file_list
-
-
-def miso_results(config):
-    file_list = list()
-    for tissue in config['datasets'].keys():
-        _miso = expand(
-            "results/rnaseq/miso_summary/{datasets}/{data_id}/{trimmer}/{aligner}/{annotation}",
-            datasets=tissue,
-            data_id=config['datasets'][tissue],
-            trimmer=config['tools']['trimmer'],
-            annotation=config['tools']['annotation'],
-            aligner=config['tools']['aligner']
-        )
-        file_list.extend(_miso)
-    return file_list

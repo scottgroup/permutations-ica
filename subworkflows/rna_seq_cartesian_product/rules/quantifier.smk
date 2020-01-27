@@ -1,5 +1,6 @@
 
 def get_sorted_bam(wildcards):
+    """ Format BAM file respective to the aligner """
     if wildcards["aligner"] == 'STAR':
         st = "results/rnaseq/{aligner}/{datasets}/{rep}/{trimmer}/{annotation}/aligned.sorted.bam"
     else:
@@ -8,6 +9,7 @@ def get_sorted_bam(wildcards):
 
 
 def get_all_sorted_bam(wildcards):
+    """ Generate all BAM files for the different software in the study """
     sorted_bam = list()
     for tissue, datasets in config['datasets'].items():
         wildcard = {"datasets": tissue}
@@ -24,10 +26,12 @@ def get_all_sorted_bam(wildcards):
 
 
 def get_all_sorted_bai(wildcards):
+    """ For all BAM files, also create a .BAM.BAI file """
     return [file + '.bai' for file in get_all_sorted_bam(wildcards)]
 
 
 rule sortBAM:
+    """ Sorts the BAM files """
     input:
         "results/rnaseq/{aligner}/{datasets}/{rep}/{trimmer_annot}/aligned.bam"
     output:
@@ -44,6 +48,7 @@ rule sortBAM:
 
 
 rule indexBAM:
+    """ Indexes the sorted BAM files """
     input:
         "results/rnaseq/{aligner}/{datasets}/{rep}/{trimmer_annot}/aligned.sorted.bam"
     output:
@@ -59,6 +64,7 @@ rule indexBAM:
 
 
 rule cufflinks:
+    """ Quantifies the alignment through Cufflinks """
     input:
         gtf = "data/references/{annotation}.gtf",
         bam = get_sorted_bam
@@ -95,6 +101,7 @@ rule cufflinks:
 
 
 rule htseq:
+    """ Quantifies the alignment through HTSeq """
     input:
         gtf = "data/references/{annotation}.gtf",
         bam = get_sorted_bam
@@ -121,6 +128,7 @@ rule htseq:
 
 
 rule featureCounts:
+    """ Quantifies the alignment through featureCounts """
     input:
         gtf = "data/references/{annotation}.gtf",
         bam = get_sorted_bam
@@ -144,6 +152,11 @@ rule featureCounts:
 
 
 rule getGeneCoverage:
+    """
+        For a specific gene, using the ENGS00000XXXXX gene ID, extracts read
+        coverage from the different pipelines, using Ensembl 98 gene
+        coordinates.
+    """
     input:
         bams = get_all_sorted_bam,
         bais = get_all_sorted_bai,

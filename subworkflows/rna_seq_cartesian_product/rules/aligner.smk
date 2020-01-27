@@ -1,5 +1,6 @@
 
 rule bowtie2_index:
+    """ Creates an index with Bowtie2 for the TopHat2 alignment """
     input:
         genome = config['path']['genome']
     output:
@@ -21,6 +22,7 @@ rule bowtie2_index:
 
 
 rule tophat2_align:
+    """ Generates alignments using TopHat2 """
     input:
         fastq1 = "results/rnaseq/{trimmer}/{datasets}/{rep}/R1.fastq",
         fastq2 = "results/rnaseq/{trimmer}/{datasets}/{rep}/R2.fastq",
@@ -48,6 +50,7 @@ rule tophat2_align:
 
 
 rule HISAT2_index:
+    """ Creates an index for HISAT2 """
     input:
         genome = config['path']['genome']
     output:
@@ -66,6 +69,7 @@ rule HISAT2_index:
 
 
 rule HISAT2_align:
+    """ Generates alignments using HISAT2 """
     input:
         fastq1 = "results/rnaseq/{trimmer}/{datasets}/{rep}/R1.fastq",
         fastq2 = "results/rnaseq/{trimmer}/{datasets}/{rep}/R2.fastq",
@@ -89,6 +93,7 @@ rule HISAT2_align:
 
 
 rule STAR_index:
+    """ Creates an index for STAR """
     input:
         "data/references/clean_refseq_gtf.tkn",
         genome = config['path']['genome'],
@@ -116,6 +121,7 @@ rule STAR_index:
 
 
 rule STAR_align:
+    """ Generates alignments using STAR """
     input:
         fastq1 = "results/rnaseq/{trimmer}/{datasets}/{rep}/R1.fastq",
         fastq2 = "results/rnaseq/{trimmer}/{datasets}/{rep}/R2.fastq",

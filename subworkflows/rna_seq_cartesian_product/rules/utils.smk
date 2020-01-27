@@ -2,6 +2,15 @@ import get_inputs
 
 
 rule combine_quantification:
+    """
+        Generates a files with all quantification from one annotation for the
+        different pipelines.
+
+        In the NaN file, to be reported, genes must have a quantification for
+        each pipeline. In the noNaN, if a gene has quantification in at least
+        one pipeline, it will be reported, and will have a 0 value for each
+        other pipeline where it is not present.
+    """
     input:
         get_inputs.quantification_results(config, '{annotation}'),
         gene_list = "data/references/{annotation}_gene.tsv"
@@ -15,6 +24,10 @@ rule combine_quantification:
 
 
 rule merge_quantifications:
+    """
+        Merge the different quantifications from rules.combine_quantification
+        using HGNC to bridge between IDs. 
+    """
     input:
         quants = expand(
             "results/cartesian_product/raw_{{isNaN}}_{annotation}.tsv",

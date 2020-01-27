@@ -15,6 +15,8 @@ bams = snakemake.input.bams
 df_gene, start, stop, strand, chr = get_gene(
     snakemake.input.gtf, snakemake.wildcards.gene
 )
+# Corrects to include the last position of a sequence
+stop += 1
 
 # Importing datasets depth
 datasets_depth = pd.read_csv(

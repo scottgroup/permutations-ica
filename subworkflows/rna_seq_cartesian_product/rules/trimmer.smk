@@ -1,5 +1,6 @@
 
 def get_cutadapt_params():
+    """ Formatting trimming parameters for Cutadapt """
     return "-q {phred} --minimum-length {minlen}".format(
         phred=config["trimmer"]["min_phred"],
         minlen=config["trimmer"]["min_length"]
@@ -7,6 +8,7 @@ def get_cutadapt_params():
 
 
 def get_trimmomatic_params():
+    """ Formatting trimming parameters for Trimmomatic """
     return [
         "SLIDINGWINDOW:5:{phred}".format(phred=config["trimmer"]["min_phred"]),
         "MINLEN:{min_len}".format(min_len=config["trimmer"]["min_length"])
@@ -14,6 +16,7 @@ def get_trimmomatic_params():
 
 
 rule cutadapt:
+    """ Trimming using Cutadapt """
     input:
         fastq1 = config['path']['raw_fastq']['R1'],
         fastq2 = config['path']['raw_fastq']['R2']
@@ -39,6 +42,7 @@ rule cutadapt:
 
 
 rule trimmomatic:
+    """ Trimming using Trimmomatic """
     input:
         r1 = config['path']['raw_fastq']['R1'],
         r2 = config['path']['raw_fastq']['R2']
