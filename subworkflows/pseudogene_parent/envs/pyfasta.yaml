@@ -1,6 +1,0 @@
-channels:
-  - default
-  - bioconda
-  - conda-forge
-dependencies:
-  - pyfasta =0.5.2

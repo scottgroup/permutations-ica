@@ -1,6 +1,0 @@
-channels:
-  - default
-  - bioconda
-  - conda-forge
-dependencies:
-  - blat =36
