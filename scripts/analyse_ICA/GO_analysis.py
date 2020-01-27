@@ -5,24 +5,29 @@ import pandas as pd
 
 from gprofiler import GProfiler
 
-plt.rcParams['svg.fonttype'] = 'none'
-plt.rcParams['font.size'] = 6
-plt.rcParams['font.family'] = 'monospace'
+from plotting_utils import mm2inch, rcParams
+for k, v in rcParams.items():
+    plt.rcParams[k] = v
+
+
+height = 50
+width = 178
 
 sources = ["GO:BP", "GO:CC", "GO:MF"]
 colors = dict()
 colors['down'] = {
-    "GO:BP": 'lightcoral',
+    "GO:BP": 'r',
     "GO:CC": 'r',
-    "GO:MF": 'firebrick',
+    "GO:MF": 'r',
 }
 colors['up'] = {
-    "GO:BP": 'dodgerblue',
+    "GO:BP": 'b',
     "GO:CC": 'b',
-    "GO:MF": 'navy',
+    "GO:MF": 'b',
 }
 
 def get_text(count):
+    """ To '-s' or not to '-s' """
     if count > 1:
         return str(count) + ' genes'
     else:
@@ -30,23 +35,13 @@ def get_text(count):
 
 
 def fit_text(text, max_length=37):
+    """ Truncate the text to fit width. """
     if len(text) > max_length:
         return text[:max_length-3] + '...'
-    return text
-
-
-def mm2inch(*tupl):
-    """
-    https://stackoverflow.com/questions/14708695/specify-figure-size-in-centimeter-in-matplotlib
-    """
-    inch = 25.4
-    if isinstance(tupl[0], tuple):
-        return tuple(i/inch for i in tupl[0])
-    else:
-        return tuple(i/inch for i in tupl)
 
 
 def reading_file(path):
+    """ Reading gene list and splitting them by side """
     up, down = list(), list()
     with open(path, 'r') as f:
         for line in f.readlines():
@@ -183,21 +178,21 @@ max_weigth = np.max([max, -min])
 plot_ori = snakemake.wildcards.ori
 if plot_ori == 'both':
     fig, axes = plt.subplots(
-        nrows=1, ncols=4, figsize=mm2inch(178, 65),
+        nrows=1, ncols=4, figsize=mm2inch(width, height),
         gridspec_kw={'width_ratios':[3,0.1,1,3]}
     )
     axDown, axMid, axUp = 0, 2, 3
     axes[1].axis('off')
 elif plot_ori == 'down':
     fig, axes = plt.subplots(
-        nrows=1, ncols=3, figsize=mm2inch(178, 65),
+        nrows=1, ncols=3, figsize=mm2inch(width, height),
         gridspec_kw={'width_ratios':[6,0.1,1]}
     )
     axDown, axMid = 0, 2
     axes[1].axis('off')
 elif plot_ori == 'up':
     fig, axes = plt.subplots(
-        nrows=1, ncols=3, figsize=mm2inch(178, 65),
+        nrows=1, ncols=3, figsize=mm2inch(width, height),
         gridspec_kw={'width_ratios':[0.2,1,6]}
     )
     axMid, axUp = 1, 2
@@ -207,7 +202,7 @@ elif plot_ori == 'up':
 down_df = get_GO_df(down)
 up_df = get_GO_df(up)
 pmin = np.max([np.max(down_df['p_value']), np.max(up_df['p_value'])])
-pmin = 90
+pmin = 40
 
 # Plotting the different parts
 plotting_middle()

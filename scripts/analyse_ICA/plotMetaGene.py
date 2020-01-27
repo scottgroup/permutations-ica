@@ -1,91 +1,65 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from get_gene_gtf import get_gene
+from matplotlib.lines import Line2D
+
+from plotting_utils import mm2inch, rcParams
+for k, v in rcParams.items():
+    plt.rcParams[k] = v
 
 
-# Params
-min_length = 160
-box_length = 80
-
-
-dist = {
-    "HISAT2": [],
-    "STAR": [],
-    "tophat2": []
-}
-
-gene_dist = {
-    "HISAT2": [],
-    "STAR": [],
-    "tophat2": []
-}
-
-for gene_file in snakemake.input.genes:
-    gene = gene_file.split('/')[-1].split('.')[0]
-    print(gene)
-
-    df_gene, gene_start, gene_end, gene_strand, gene_seq = get_gene(
-        snakemake.input.gtf, gene
-    )
-    print(gene_strand)
-
-    data = pd.read_csv(gene_file, sep='\t', index_col=0, header=[0, 1, 2, 3, 4])
-    data = data.groupby(level=['aligner', 'dataset', 'tissue', 'trimmer'], axis=1).mean()
-    data = data.groupby(level='aligner', axis=1).mean()
-
-    # For all exon
-    df_exon = df_gene[df_gene['feature'] == 'exon']
-    transcripts = df_exon['transcript_name'].unique().tolist()
-    transc_count = {
-        transcript: len(df_exon[df_exon['transcript_name'] == transcript])
-        for transcript in transcripts
+pos = {
+    '5': {
+        'xticks': [0, 10, 90],
+        'xticklabels': ['-10', '0', '+80']
+    },
+    '3': {
+        'xticks': [90, 80, 0],
+        'xticklabels': ['-10', '0', '+80']
     }
+}
 
-    for indx, exon in df_exon.iterrows():
-        # Reseting
-        dist_5 = None
-        # print(exon.start, exon.end)
-        start = int(exon.start) - gene_start
-        end = int(exon.end) - gene_start
+# Loading data
+mean = pd.read_csv(snakemake.input.mean, sep='\t', header=[0,1], index_col=0)
+std = pd.read_csv(snakemake.input.std, sep='\t', header=[0,1])
 
-        exon_len = end-start
-        if exon_len > min_length:
+# Plotting
+figure, axes = plt.subplots(nrows=1, ncols=2, figsize=mm2inch(178/7*2.5, 50))
 
-            # For positive strand
-            if gene_strand == '+':
-                # Not considering the 5' end of the first exon
-                if int(exon.exon_number) != 1:
-                    dist_5 = data.iloc[start-5:start+box_length]
+x = np.arange(len(mean))
+handles = dict()
+for ax, prime in enumerate(['5', '3']):
 
-            # For negative strand
-            elif gene_strand == '-':
-                pass
+    for tool in mean.columns.get_level_values('tool'):
+        quant = mean.loc(axis=1)[prime, tool]
+        std_quant = std.loc(axis=1)[prime, tool]
 
-            if dist_5 is not None:
-                max = np.max([np.max(dist_5[tool]) for tool in dist_5.keys()])
-                for tool in gene_dist.keys():
-                    dist_5[tool] /= max
-                    gene_dist[tool].append(dist_5[tool].tolist())
+        handles[tool], = axes[ax].plot(
+            x, quant,
+            color=colors[tool], linewidth=2
+        )
+        handles[tool].set_label(tool)
 
-    # Getting the mean profile for each gene
-    for tool in gene_dist.keys():
-        data = pd.DataFrame(gene_dist[tool])
-        dist[tool].append(data.mean(axis=0).tolist())
+    # Setting limits
+    xmin, xmax = 0, len(x)-1
+    ymin, ymax = 0, 1
+    axes[ax].set_xlim([xmin, xmax])
+    axes[ax].set_ylim([ymin, ymax])
 
+    # Removing axis and plotting xline
+    axes[ax].set_frame_on(False)
+    axes[ax].get_xaxis().tick_bottom()
+    axes[ax].axes.get_yaxis().set_visible(False)
+    axes[ax].add_artist(Line2D((xmin, xmax), (ymin, ymin), color='black', linewidth=1))
 
-for tool in dist.keys():
-    mean = np.array(pd.DataFrame(dist[tool]).mean(axis=0).tolist())
-    std = np.array(pd.DataFrame(dist[tool]).std(axis=0).tolist())
+    # Drawing vertical lines
+    axes[ax].axvline(pos[prime]['xticks'][1], linestyle=':', color='k')
 
-    x = np.arange(len(mean))
+    # Setting axes labels
+    axes[ax].set_xticks(pos[prime]['xticks'])
+    axes[ax].set_xticklabels(pos[prime]['xticklabels'])
 
-    plt.plot(x, mean, linewidth=2)
-    plt.fill_between(
-    x = x,
-    y1 = mean + std,
-    y2 = mean - std,
-    alpha=0.3
-)
+axes[0].legend(handles.values(), labels=['HISAT2', 'STAR', 'TopHat2'])
 
+figure.tight_layout()
 plt.savefig(snakemake.output.plot)

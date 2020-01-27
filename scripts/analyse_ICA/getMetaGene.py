@@ -8,6 +8,10 @@ min_length = 160
 box_length = 80
 extending = 10
 
+box_length = 120
+min_length = 2*box_length
+extending = 15
+
 primes = [3, 5]
 dist = dict()
 for prime in primes:
@@ -17,7 +21,7 @@ for prime in primes:
         "tophat2": []
     }
 
-for gene_file in snakemake.input.genes[:5]:
+for gene_file in snakemake.input.genes:
     gene_dist = dict()
     for prime in primes:
         gene_dist[prime] = {
@@ -58,17 +62,17 @@ for gene_file in snakemake.input.genes[:5]:
             if gene_strand == '+':
                 # Not considering the 5' end of the first exon
                 if int(exon.exon_number) != 1:
-                    dist_5 = data.iloc[start-extending:start+box_length]
+                    dist_5 = data.iloc[start-extending-1:start+box_length]
                 # Not considering the 3' end of the last exon
                 if int(exon.exon_number) != transc_count[exon.transcript_name]:
-                    dist_3 = data.iloc[end-box_length:end+extending]
+                    dist_3 = data.iloc[end-box_length:end+extending+1]
 
             # For negative strand
             elif gene_strand == '-':
                 if int(exon.exon_number) != transc_count[exon.transcript_name]:
-                    dist_5 = data.iloc[end-box_length:end+extending][::-1]
+                    dist_5 = data.iloc[end-box_length-1:end+extending][::-1]
                 if int(exon.exon_number) != 1:
-                    dist_3 = data.iloc[start-extending:start+box_length][::-1]
+                    dist_3 = data.iloc[start-extending:start+box_length+1][::-1]
 
             for _dist, prime in [(dist_5, 5), (dist_3, 3)]:
                 if _dist is not None:
@@ -96,5 +100,5 @@ mean = data.groupby(level=['prime', 'tool'], axis=1).mean()
 std = data.groupby(level=['prime', 'tool'], axis=1).std()
 
 # To file
-mean.to_csv(snakemake.output.mean, sep='\t', index=False)
-std.to_csv(snakemake.output.std, sep='\t', index=False)
+mean.to_csv(snakemake.output.mean, sep='\t')
+std.to_csv(snakemake.output.std, sep='\t')
