@@ -1,3 +1,12 @@
+subworkflow refseq_noexon:
+    workdir:
+        "subworkflows/refseq_noexon"
+    snakefile:
+        "subworkflows/refseq_noexon/Snakefile"
+    configfile:
+        "subworkflows/refseq_noexon/config.json"
+
+
 subworkflow pseudogene_parent:
     workdir:
         "subworkflows/pseudogene_parent"
