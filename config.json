@@ -6,6 +6,11 @@
         "testis": ["ERR315351", "ERR315492", "ERR315352", "ERR315456"],
         "thyroid": ["ERR315422", "ERR315397", "ERR315412", "ERR315428"]
     },
+    "path":
+    {
+        "ICAmodel": "results/ICA/sklearnFastICA/{ICAmodel}/M{M}_n{n}_std{std}/",
+        "combineModel": "results/ICA/{ICAmethod}/{ICAmodel}/combine_{min}to{max}_n{n}_std{std}/"
+    },
     "tools":
     {
         "trimmer": ["cutadapt", "trimmomatic"],
@@ -18,7 +23,7 @@
         "pseudogenes_parents": "http://pseudogene.org/psicube/data/gencode.v10.pgene.parents.txt",
         "pseudogenes_biotype": "http://pseudogene.org/psicube/data/gencode.v10.pseudogene.txt"
     },
-    "ICA_datasets":
+    "ICA_models":
     {
         "tissues_NaN_tripleAnnot_cufflinks":
         {
@@ -39,25 +44,6 @@
                 "quantifier": ["cufflinks"]
             }
         },
-        "tissues_NaN_tripleAnnot_dualQuant":
-        {
-            "params":
-            {
-                "counts": "tissues_NaN",
-                "ICAmethod": ["sklearnFastICA"],
-                "max": 35,
-                "min": 6,
-                "n": 25,
-                "sigma": [4],
-                "std": [0],
-                "threshold": 0.90
-            },
-            "variables":
-            {
-                "annotation": ["ensembl92", "ensembl98", "refseq"],
-                "quantifier": ["featureCounts", "htseq"]
-            }
-        },
         "tissues_NaN_tripleAnnot":
         {
             "params":
@@ -74,60 +60,6 @@
             "variables":
             {
                 "annotation": ["ensembl92", "ensembl98", "refseq"]
-            }
-        },
-        "tissues_noNaN_tripleAnnot":
-        {
-            "params":
-            {
-                "counts": "tissues_noNaN",
-                "ICAmethod": ["sklearnFastICA"],
-                "max": 35,
-                "min": 6,
-                "n": 25,
-                "sigma": [4],
-                "std": [0],
-                "threshold": 0.90
-            },
-            "variables":
-            {
-                "annotation": ["ensembl92", "ensembl98", "refseq"]
-            }
-        },
-        "tissues_NaN_dualAnnot":
-        {
-            "params":
-            {
-                "counts": "tissues_NaN",
-                "ICAmethod": ["sklearnFastICA"],
-                "max": 35,
-                "min": 6,
-                "n": 25,
-                "sigma": [4],
-                "std": [0],
-                "threshold": 0.90
-            },
-            "variables":
-            {
-                "annotation": ["ensembl98", "refseq"]
-            }
-        },
-        "tissues_noNaN_dualAnnot":
-        {
-            "params":
-            {
-                "counts": "tissues_noNaN",
-                "ICAmethod": ["sklearnFastICA"],
-                "max": 35,
-                "min": 6,
-                "n": 25,
-                "sigma": [4],
-                "std": [0],
-                "threshold": 0.90
-            },
-            "variables":
-            {
-                "annotation": ["ensembl98", "refseq"]
             }
         }
     }

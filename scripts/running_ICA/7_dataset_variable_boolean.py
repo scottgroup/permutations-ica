@@ -2,7 +2,7 @@ import pandas as pd
 from Dataset import Dataset
 
 # Loading dataset
-data_slice = snakemake.config['ICA_datasets'][snakemake.wildcards.dataset]['variables']
+data_slice = snakemake.config['ICA_models'][snakemake.wildcards.ICAmodel]['variables']
 dataset = Dataset(snakemake.input.counts, data_slice)
 
 # Keeping index

@@ -4,7 +4,7 @@ ICAmodel_path = config["path"]["ICAmodel"]
 
 def get_counts(wildcards):
     """ Returns path of the count file """
-    fname = config['ICA_datasets'][wildcards.dataset]['params']['counts']
+    fname = config['ICA_models'][wildcards.ICAmodel]['params']['counts']
     return rna_seq_cartesian_product("results/cartesian_product/{dataset}.tsv".format(dataset=fname))
 
 
@@ -16,7 +16,7 @@ rule running_sklearnFastICA:
             hosted in the scripts/running_ICA/ICAmethods folder and they all
             share the same Dataset object and preprocessing.
         dataset -> Specifies the subset of data chosen. All datasets must be
-            defined in config.json under ICA_datasets as a dictionary where
+            defined in config.json under ICA_models as a dictionary where
             each key is a variable, and each value a list of possible variable
             states.
         M -> Number of components to generate.
@@ -24,7 +24,7 @@ rule running_sklearnFastICA:
             optimisation starting point.
         std -> Building the ICA model only with genes that have a standard
             deviation (of expression value) this is at least std*(mean standard
-            deviation for all genes). Keeps all the gene at std = 0. 
+            deviation for all genes). Keeps all the gene at std = 0.
     """
     input:
         counts = get_counts
@@ -119,7 +119,7 @@ rule dataset_variable_boolean:
     input:
         counts = get_counts
     output:
-        var_bool = "results/ICA/variable_boolean/{dataset}.tsv",
+        var_bool = "results/ICA/variable_boolean/{model}.tsv",
     conda:
         "../envs/ICA_python.yaml"
     script:
