@@ -1,0 +1,87 @@
+configfile: "config.json"
+
+rule all:
+    input:
+        "data/references/refseq.gtf"
+
+rule download_annotations:
+    """ Downloads the RefSeq annotation """
+    output:
+        "data/references/{annotation}.gtf"
+    params:
+        link = lambda wildcards: config["download"][wildcards.annotation]
+    shell:
+        "wget --quiet -O {output}.gz {params.link} && "
+        "gunzip {output}.gz "
+
+
+rule get_GeneID_numbers:
+    """ Calculate number of entries for each GeneID """
+    input:
+        gtf = "data/references/refseq.gtf"
+    output:
+        GeneID_numbers = "results/GeneID_numbers.tsv"
+    conda:
+        "envs/python.yaml"
+    script:
+        "scripts/get_GeneID_numbers.py"
+
+
+rule download_HGNC:
+    """
+        Downloads an HGNC table with the custom download tool. Downloads data
+        provided by HGNC and by external sources.
+    """
+    output:
+        temp("data/references/hgnc.txt.temp")
+    shell:
+        "wget --quiet -O {output} \"{config[download][HGNC]}\""
+
+
+rule clean_HGNC:
+    """
+        For some HGNC ID, data from HGNC and external sources is not equal. If
+        one entry for a source is missing, the other source is used. If the two
+        sources do not have the same data, HGNC is prioritized.
+    """
+    input:
+        hgnc = "data/references/hgnc.txt.temp"
+    output:
+        hgnc = "data/references/hgnc.txt"
+    conda:
+        "envs/python.yaml"
+    script:
+        "scripts/clean_HGNC.py"
+
+
+rule quantify_genes:
+    """
+        Intersect the RefSeq genes with the HGNC list, and only keep genes that
+        have only one line in the GTF file.
+    """
+    input:
+        GeneID_numbers = rules.get_GeneID_numbers.output.GeneID_numbers,
+        hgnc = rules.clean_HGNC.output.hgnc
+    output:
+        hgnc_noRNA = "results/hgnc_noRNA.tsv"
+    conda:
+        "envs/python.yaml"
+    script:
+        "scripts/quantify_genes.py"
+
+
+rule adding_biotype:
+    """
+        Adding Ensembl98 and RefSeq gene biotypes to RefSeq gene that are
+        described using a single gene feature. 
+    """
+    input:
+        hgnc_noRNA = rules.quantify_genes.output.hgnc_noRNA,
+        gtf_refseq = "data/references/refseq.gtf",
+        gtf_ens98 = "data/references/ensembl98.gtf"
+    output:
+        result = "results/SupplementaryData3.tsv"
+    conda:
+        "envs/python.yaml"
+    script:
+        "scripts/adding_biotype.py"
