@@ -40,7 +40,7 @@ rule get_gene_biotype:
 rule compare_pseudogenes_parents:
     """
         Plots a distribution of the number of pseudogenes for each gene in two
-        compared components 
+        compared components.
     """
     input:
         parent = rules.download_pseudogene_parents.output.file,
