@@ -119,7 +119,7 @@ rule dataset_variable_boolean:
     input:
         counts = get_counts
     output:
-        var_bool = "results/ICA/variable_boolean/{model}.tsv",
+        var_bool = "results/ICA/variable_boolean/{ICAmodel}.tsv",
     conda:
         "../envs/ICA_python.yaml"
     script:

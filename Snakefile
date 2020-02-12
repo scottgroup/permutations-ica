@@ -31,11 +31,13 @@ rule all:
     input:
         # Running the RNA-seq pipelines
         rna_seq_cartesian_product("results/cartesian_product/tissues_NaN.tsv"),
-        # Running the ICA models from the config file
-        running_ICA.get_ICA_running(config, ICAruns),
-        # Generating the basic plots to describe the ICA models
-        plotting_ICA.get_ICA_plotting(config, ICAruns),
+        rna_seq_cartesian_product("results/cartesian_product/tissues_noNaN.tsv"),
+        # Generating the basic plots to find the optimal M
+        plotting_ICA.find_optimal_M(config, ICAmodels),
+        # Choose which ICAmodels M to analyse
+        running_ICA.get_ICA_running(config, ICAmodels),
+        plotting_ICA.get_ICA_plotting(config, ICAmodels),
         # Running the DESeq2 analysis from the config file
-        DEGs.get_DESeq(config, ICAruns),
+        DEGs.get_DESeq(config, ICAmodels),
         # Generating Supplementary Data 3 file
         refseq_noexon("results/SupplementaryData3.tsv")

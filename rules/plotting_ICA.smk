@@ -97,8 +97,8 @@ rule plotting_distribution_grid:
         the input and 1-based in the output.
     """
     input:
-        proj = ICAmodel_path + "filtered_components/sigma_{sigma}/projection.tsv",
-        comp_list = ICAmodel_path + "filtered_components/sigma_{sigma}/comp_list.txt"
+        proj = ICAmodel_path + "sigma_{sigma}/filtered_components/projection.tsv",
+        comp_list = ICAmodel_path + "sigma_{sigma}/filtered_components/comp_list.txt"
     output:
         plot = ICAmodel_path + "sigma_{sigma}/grid.svg"
     params:
@@ -115,8 +115,8 @@ rule plotting_heatmap_components:
         and methodological variables.
     """
     input:
-        proj = ICAmodel_path + "filtered_components/sigma_{sigma}/projection.tsv",
-        comp_list = ICAmodel_path + "filtered_components/sigma_{sigma}/comp_list.txt"
+        proj = ICAmodel_path + "sigma_{sigma}/filtered_components/projection.tsv",
+        comp_list = ICAmodel_path + "sigma_{sigma}/filtered_components/comp_list.txt"
     output:
         plot = ICAmodel_path + "sigma_{sigma}/heatmap_components.svg"
     params:

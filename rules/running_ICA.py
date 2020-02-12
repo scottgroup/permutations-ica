@@ -11,11 +11,7 @@ def get_components_range(wildcards):
 
 def get_ICA_running(configs, ICAmodels):
     """
-    Return all necessary files for computations of the model.
-
-    This function intentionally exports too many files. Some of them are not
-    necessary for a sound completion of the model. The redudant file names are
-    intented to give modularity.
+    For specified M in ICAmodel parameters, run the different analysis scripts
     """
     files = list()
 
@@ -26,7 +22,7 @@ def get_ICA_running(configs, ICAmodels):
         config['ICAmodel'] = ICAmodel
 
         # Adding M list to params
-        config['M'] = list(range(config['min'], config['max']+1))
+        config['M'] = config['to_analyse']
 
         # Calculating all ICA_run
         ICA_run = list()
@@ -43,7 +39,7 @@ def get_ICA_running(configs, ICAmodels):
         files.extend(expand(path, **config))
 
         # ICA projections of components
-        path = "results/ICA/{ICAmethod}/{ICAmodel}/{ICA_run}/filtered_components/sigma_{sigma}/projection.tsv"
+        path = "results/ICA/{ICAmethod}/{ICAmodel}/{ICA_run}/sigma_{sigma}/filtered_components/projection.tsv"
         files.extend(expand(path, **config))
 
     return files
