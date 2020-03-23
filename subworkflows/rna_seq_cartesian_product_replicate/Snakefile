@@ -1,5 +1,7 @@
 configfile: "config.json"
 
+from functools import partial
+
 import rules.get_inputs as get_inputs
 
 # Defining wildcards constraints
@@ -24,4 +26,4 @@ include: "rules/utils.smk"
 # Run this if working on a cluster where nodes do not have an internet access
 rule internet_download:
     input:
-        get_inputs.download_list
+        partial(get_inputs.download_list, config)

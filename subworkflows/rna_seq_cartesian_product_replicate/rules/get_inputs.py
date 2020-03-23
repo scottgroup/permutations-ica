@@ -1,6 +1,7 @@
 from snakemake.io import expand
 
-def download_list(config):
+
+def download_list(config, wildcards):
     """
     Listing all downloads.
     Useful to run independently if cluster nodes have not internet access.
