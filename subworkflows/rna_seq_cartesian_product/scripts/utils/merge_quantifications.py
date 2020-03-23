@@ -43,7 +43,7 @@ hgnc_df.columns = pd.MultiIndex.from_tuples(
 )
 
 if snakemake.wildcards.isNaN == 'noNaN':
-    hgnc_df.fillna(0, axis=1, inplace=True)
+    hgnc_df.fillna('F', axis=1, inplace=True)
 else:
     hgnc_df.dropna(axis=0, inplace=True)
 

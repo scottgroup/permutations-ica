@@ -66,7 +66,7 @@ data_df.columns = pd.MultiIndex.from_tuples(
 data_df.to_csv(snakemake.output.out_NaN_file, sep='\t')
 
 # Changing NaN to zero
-data_df.fillna(value=0, inplace=True)
+data_df.fillna(value='F', inplace=True)
 
 # Saving no NaN to file
 data_df.to_csv(snakemake.output.out_file, sep='\t')

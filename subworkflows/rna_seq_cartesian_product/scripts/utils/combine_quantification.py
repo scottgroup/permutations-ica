@@ -45,7 +45,7 @@ for file in files:
     file_dict = ''
     if 'cufflinks' in file:
         file_dict = parse_cufflinks(file)
-    elif 'featureCounts' in file:
+    elif 'featureCounts' in file:lambda
         file_dict = parse_featureCounts(file)
     elif 'htseq' in file:
         file_dict = parse_htseq(file)
@@ -66,7 +66,7 @@ data_df.columns = pd.MultiIndex.from_tuples(
 data_df.to_csv(snakemake.output.out_NaN_file, sep='\t')
 
 # Changing NaN to zero
-data_df.fillna(value=0, inplace=True)
+data_df.fillna(value='F', inplace=True)
 
 # Saving no NaN to file
 data_df.to_csv(snakemake.output.out_file, sep='\t')
