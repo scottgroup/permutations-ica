@@ -1,0 +1,57 @@
+{
+    "download":
+    {
+        "genome": "ftp://ftp.ensembl.org/pub/release-98/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz",
+        "HGNC": "https://www.genenames.org/cgi-bin/download/custom?col=gd_hgnc_id&col=gd_app_sym&col=gd_pub_ensembl_id&col=md_ensembl_id&col=gd_pub_eg_id&col=md_eg_id&status=Approved&hgnc_dbtag=on&order_by=gd_app_sym_sort&format=text&submit=submit",
+        "ensembl92": "ftp://ftp.ensembl.org/pub/release-92/gtf/homo_sapiens/Homo_sapiens.GRCh38.92.chr.gtf.gz",
+        "ensembl98": "ftp://ftp.ensembl.org/pub/release-98/gtf/homo_sapiens/Homo_sapiens.GRCh38.98.chr.gtf.gz",
+        "refseq": "ftp://ftp.ncbi.nlm.nih.gov/genomes/Homo_sapiens/ARCHIVE/ANNOTATION_RELEASE.109/GRCh38_interim_annotation/interim_GRCh38.p12_top_level_2019-01-25.gtf.gz"
+    },
+    "path":
+    {
+        "genome": "data/references/genome.fa",
+        "raw_fastq":
+        {
+            "R1": "data/datasets/{datasets}/{data_id}.R1.fastq.gz",
+            "R2": "data/datasets/{datasets}/{data_id}.R2.fastq.gz"
+        }
+    },
+    "datasets":
+    {
+        "adrenal_gland": ["SRR4422339", "SRR4422204", "SRR4422517", "SRR4421568"],
+        "spleen": ["SRR4421468", "SRR4422445", "SRR4421334", "SRR4421642"],
+        "stomach": ["SRR4422373", "SRR4422210", "SRR4421597", "SRR4421836"],
+        "tibial_nerve": ["SRR4421566", "SRR4422381", "SRR4422106", "SRR4422380"]
+    },
+    "trimmer":
+    {
+        "min_length": "75",
+        "min_phred": "15"
+    },
+    "tools":
+    {
+        "annotation": ["ensembl92", "ensembl98", "refseq"],
+        "trimmer": ["cutadapt", "trimmomatic"],
+        "aligner": ["HISAT2", "STAR", "tophat2"],
+        "quantifier": ["cufflinks", "featureCounts", "htseq"]
+    },
+    "options":
+    {
+        "stranded":
+        {
+            "cufflinks": "fr-firststrand",
+            "featureCounts": "2",
+            "hisat2": "--rna-strandness RF",
+            "htseq": "reverse",
+            "tophat2": "fr-firststrand"
+        },
+        "unstranded":
+        {
+            "cufflinks": "fr-unstranded",
+            "featureCounts": "0",
+            "hisat2": "",
+            "htseq": "no",
+            "tophat2": "fr-unstranded"
+        },
+    }
+}

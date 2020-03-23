@@ -1,0 +1,101 @@
+{
+    "__default__":
+    {
+        "job-name": "SM.{rule}",
+        "nodes": "1",
+        "cpus-per-task": "40",
+        "mem": "92G",
+        "time": "0-1:00:00",
+        "mail-user": "MAIL@DOMAIN",
+        "mail-type": "FAIL"
+    },
+    "translateRefseqChr":
+    {
+    	"cpus-per-task": "1",
+	    "mem": "8G"
+    },
+    "get_datasets_depth":
+    {
+    	"cpus-per-task": "1",
+	    "mem": "8G",
+        "time": "0-12:00:00"
+    },
+    "bowtie2_index":
+    {
+        "time": "0-6:00:00"
+    },
+    "tophat2_align":
+    {
+    	"time": "0-11:00:00",
+    	"mem": "60G",
+    	"cpus-per-task": "16"
+    },
+    "HISAT2_index":
+    {
+    	"time": "0-6:00:00"
+    },
+    "HISAT2_align":
+    {
+    	"time": "0-3:00:00",
+    	"mem": "60G",
+    	"cpus-per-task": "16"
+    },
+    "STAR_index":
+    {
+	    "time": "0-6:00:00"
+    },
+    "STAR_align":
+    {
+    	"time": "0-3:00:00",
+	    "mem": "60G",
+	    "cpus-per-task": "16"
+    },
+    "cutadapt":
+    {
+    	"time": "0-3:00:00",
+    	"mem": "60G",
+    	"cpus-per-task": "16"
+    },
+    "trimmomatic":
+    {
+    	"time": "0-3:30:00",
+    	"mem": "60G",
+    	"cpus-per-task": "16"
+    },
+    "sortBAM":
+    {
+    	"time": "0-1:30:00",
+    	"cpus-per-task": "8",
+	    "mem": "30G"
+    },
+    "indexBAM":
+    {
+        "time": "0-00:30:00",
+        "cpus-per-task": "1",
+        "mem": "4000M"
+    },
+    "getGeneCoverage":
+    {
+        "time": "0-4:30:00",
+        "cpus-per-task": "1",
+        "mem": "4000M"
+    },
+    "cufflinks":
+    {
+    	"time": "0-2:30:00",
+    	"mem": "60G",
+    	"cpus-per-task": "16"
+    },
+    "featureCounts":
+    {
+    	"time": "0-1:00:00",
+    	"mem": "60G",
+    	"cpus-per-task": "16"
+    },
+    "htseq":
+    {
+    	"time": "0-8:30:00",
+    	"mem": "8000M",
+    	"cpus-per-task": "2"
+    }
+}

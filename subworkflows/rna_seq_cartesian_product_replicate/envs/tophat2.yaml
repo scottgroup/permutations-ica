@@ -1,0 +1,6 @@
+channels:
+  - default
+  - bioconda
+dependencies:
+  - tophat ==2.1.1
+  - bowtie2 ==2.3.4.3

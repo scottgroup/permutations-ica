@@ -1,0 +1,27 @@
+configfile: "config.json"
+
+import rules.get_inputs as get_inputs
+
+# Defining wildcards constraints
+wildcard_constraints:
+    annotation = "({})".format("|".join(config['tools']['annotation'])),
+    trimmer = "(trimmomatic|cutadapt)",
+    datasets = "({})".format("|".join(config['datasets'].keys())),
+    category = "(data_id|annotation|tissue|quantifier|aligner)",
+    isNaN = "(NaN|noNaN)",
+    strand= "(stranded|unstranded)"
+
+# Adding rules download datasets and references
+include: "rules/downloads.smk"
+
+# Adding rules for the RNA-seq pipeline
+include: "rules/aligner.smk"
+include: "rules/quantifier.smk"
+include: "rules/trimmer.smk"
+include: "rules/utils.smk"
+
+
+# Run this if working on a cluster where nodes do not have an internet access
+rule internet_download:
+    input:
+        get_inputs.download_list

@@ -14,3 +14,12 @@ subworkflow rna_seq_cartesian_product:
         "subworkflows/rna_seq_cartesian_product/Snakefile"
     configfile:
         "subworkflows/rna_seq_cartesian_product/config.json"
+
+
+subworkflow rna_seq_cartesian_product_replicate:
+    workdir:
+        "subworkflows/rna_seq_cartesian_product_replicate"
+    snakefile:
+        "subworkflows/rna_seq_cartesian_product_replicate/Snakefile"
+    configfile:
+        "subworkflows/rna_seq_cartesian_product_replicate/config.json"
