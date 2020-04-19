@@ -2,7 +2,7 @@ import pandas as pd
 
 
 def get_col_tuple(file):
-    return tuple(file.split('/')[2:-1])
+    return tuple([col for col in file.split('/')[2:-1] if col not in ('stranded', 'unstranded')])
 
 
 def parse_cufflinks(file):
@@ -56,6 +56,9 @@ for file in files:
 
 data_df.reset_index(inplace=True)
 data_df.set_index(names, inplace=True)
+
+print(data_df)
+print(data_df.columns)
 
 data_df.columns = pd.MultiIndex.from_tuples(
     data_df.columns,
