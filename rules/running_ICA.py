@@ -33,10 +33,6 @@ def get_ICA_running(configs, ICAmodels):
         path = "results/ICA/{ICAmethod}/{ICAmodel}/M{M}_n{n}_std{std}/components.tsv"
         files.extend(expand(path, **config))
 
-        # ICA model for combined M
-        path = "results/ICA/{ICAmethod}/{ICAmodel}/combine_{min}to{max}_n{n}_std{std}/components.tsv"
-        files.extend(expand(path, **config))
-
         # ICA projections of components
         path = "results/ICA/{ICAmethod}/{ICAmodel}/{ICA_run}/sigma_{sigma}/filtered_components/projection.tsv"
         files.extend(expand(path, **config))
