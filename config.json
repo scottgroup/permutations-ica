@@ -63,6 +63,44 @@
             {
                 "annotation": ["ensembl92", "ensembl98", "refseq"]
             }
+        },
+        "tissues_NaN_stranded_tripleAnnot":
+        {
+            "params":
+            {
+                "counts": "tissues_stranded_NaN",
+                "ICAmethod": ["sklearnFastICA"],
+                "max": 25,
+                "min": 8,
+                "n": 25,
+                "sigma": [4],
+                "std": [0],
+                "threshold": 0.90,
+                "to_analyse": []
+            },
+            "variables":
+            {
+                "annotation": ["ensembl92", "ensembl98", "refseq"]
+            }
+        },
+        "tissues_NaN_unstranded_tripleAnnot":
+        {
+            "params":
+            {
+                "counts": "tissues_unstranded_NaN",
+                "ICAmethod": ["sklearnFastICA"],
+                "max": 25,
+                "min": 8,
+                "n": 25,
+                "sigma": [4],
+                "std": [0],
+                "threshold": 0.90,
+                "to_analyse": []
+            },
+            "variables":
+            {
+                "annotation": ["ensembl92", "ensembl98", "refseq"]
+            }
         }
     }
 }

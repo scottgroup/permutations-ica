@@ -4,8 +4,11 @@ from DEGs import get_DEG_results
 def get_counts(wildcards):
     """ """
     fname = config['ICA_models'][wildcards.ICAmodel]['params']['counts']
-    return rna_seq_cartesian_product("results/cartesian_product/{dataset}.tsv".format(dataset=fname))
-
+    dataset = "results/cartesian_product/{dataset}.tsv".format(dataset=fname)
+    if 'stranded' in wildcards.ICAmodel:
+        return rna_seq_cartesian_product_replicate(dataset)
+    else:
+        return rna_seq_cartesian_product(dataset)
 
 rule prepare_data_for_DESeq2:
     """ Format the counts and samples matrices for DESeq2 """

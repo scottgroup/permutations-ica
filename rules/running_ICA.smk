@@ -5,7 +5,11 @@ ICAmodel_path = config["path"]["ICAmodel"]
 def get_counts(wildcards):
     """ Returns path of the count file """
     fname = config['ICA_models'][wildcards.ICAmodel]['params']['counts']
-    return rna_seq_cartesian_product("results/cartesian_product/{dataset}.tsv".format(dataset=fname))
+    dataset = "results/cartesian_product/{dataset}.tsv".format(dataset=fname)
+    if 'stranded' in wildcards.ICAmodel:
+        return rna_seq_cartesian_product_replicate(dataset)
+    else:
+        return rna_seq_cartesian_product(dataset)
 
 
 rule running_sklearnFastICA:

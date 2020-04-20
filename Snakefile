@@ -32,6 +32,9 @@ rule all:
         # Running the RNA-seq pipelines
         rna_seq_cartesian_product("results/cartesian_product/tissues_NaN.tsv"),
         rna_seq_cartesian_product("results/cartesian_product/tissues_noNaN.tsv"),
+        # Running the alternative RNA-seq pipelines
+        rna_seq_cartesian_product_replicate("results/cartesian_product/tissues_stranded_NaN.tsv"),
+        rna_seq_cartesian_product_replicate("results/cartesian_product/tissues_unstranded_NaN.tsv"),
         # Generating the basic plots to find the optimal M
         plotting_ICA.find_optimal_M(config, ICAmodels),
         # Choose which ICAmodels M to analyse
