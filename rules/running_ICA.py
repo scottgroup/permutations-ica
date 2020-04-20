@@ -27,7 +27,6 @@ def get_ICA_running(configs, ICAmodels):
         # Calculating all ICA_run
         ICA_run = list()
         ICA_run.extend(expand("M{M}_n{n}_std{std}", **config))
-        ICA_run.extend(expand("combine_{min}to{max}_n{n}_std{std}", **config))
         config['ICA_run'] = ICA_run
 
         # ICA model for a specific M
